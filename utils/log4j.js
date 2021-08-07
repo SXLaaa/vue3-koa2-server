@@ -1,6 +1,6 @@
 /**
  * 日志存储
- * @author JackBean
+ * @author 史小雷
  */
  const log4js = require('log4js')
 
@@ -14,8 +14,8 @@
  }
  
  log4js.configure({ // 日志的配置入口
-     appenders:{ // 对各种日志输出形式的定义
-         console:{ type:'console' },
+     appenders:{ // 追加器：对各种日志输出形式的定义
+         console:{ type:'console' }, // 名字随意起
          info:{
              type: 'file', 
              filename: 'logs/all-logs.log'
@@ -28,7 +28,10 @@
          }
      },
      categories:{ // 决定了在某种类型输出下调用哪些的appender
-         default:{ appenders: [ 'console' ], level: 'debug' },
+         default:{ 
+             appenders: [ 'console' ], 
+             level: 'debug' 
+        },
          info:{
              appenders: [ 'info','console' ],
              level: 'info'
@@ -45,7 +48,7 @@
   * @param {string} content 
   */
  exports.debug = (content)=>{
-     let logger = log4js.getLogger();
+     let logger = log4js.getLogger(); // 根据需要获取logger
      logger.level = levels.debug;
      logger.debug(content);
  }
