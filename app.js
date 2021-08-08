@@ -6,12 +6,13 @@ const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger') // 作用：打印后台日志
 const log4js = require('./utils/log4j')
-const index = require('./routes/index')
 const users = require('./routes/users')
+const router = require('koa-router')()
 
 // error handler
 onerror(app)
-// middlewares
+require('./config/db')
+// middlewares  
 app.use(bodyparser({
   enableTypes:['json', 'form', 'text'] // 接受前端传过来的参数格式
 }))
@@ -24,15 +25,15 @@ app.use(views(__dirname + '/views', {
 
 // logger
 app.use(async (ctx, next) => {
+  log4js.info(`get params:${JSON.stringify(ctx.request.query)}`)
+  log4js.info(`post params:${JSON.stringify(ctx.request.body)}`)
   await next()
-  log4js.info(`dddddfff++`)
 })
 
+router.prefix("/api")
+router.use(users.routes(), users.allowedMethods()) // use 加载路由，并允许下面的所有方法
+app.use(router.routes(),router.allowedMethods())
 
-
-// routes
-app.use(index.routes(), index.allowedMethods()) // use 加载路由，并允许下面的所有方法
-app.use(users.routes(), users.allowedMethods())
 // error-handling
 app.on('error', (err, ctx) => {
   log4js.error(`${err.stack}`) // 打印错误栈信息
