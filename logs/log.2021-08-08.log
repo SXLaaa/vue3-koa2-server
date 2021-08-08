@@ -1,0 +1,13 @@
+[2021-08-08T23:23:10.330] [ERROR] error - TypeError: Cannot convert object to primitive value
+    at /Users/luzheng/Desktop/练习/Vue练习/vue3.0-koa2/manager-server/app.js:28:58
+    at dispatch (/Users/luzheng/Desktop/练习/Vue练习/vue3.0-koa2/manager-server/node_modules/koa/node_modules/koa-compose/index.js:42:32)
+    at views (/Users/luzheng/Desktop/练习/Vue练习/vue3.0-koa2/manager-server/node_modules/koa-views/src/index.js:91:12)
+    at dispatch (/Users/luzheng/Desktop/练习/Vue练习/vue3.0-koa2/manager-server/node_modules/koa/node_modules/koa-compose/index.js:42:32)
+    at serve (/Users/luzheng/Desktop/练习/Vue练习/vue3.0-koa2/manager-server/node_modules/koa-static/index.js:53:15)
+    at dispatch (/Users/luzheng/Desktop/练习/Vue练习/vue3.0-koa2/manager-server/node_modules/koa/node_modules/koa-compose/index.js:42:32)
+    at logger (/Users/luzheng/Desktop/练习/Vue练习/vue3.0-koa2/manager-server/node_modules/koa-logger/index.js:67:13)
+    at dispatch (/Users/luzheng/Desktop/练习/Vue练习/vue3.0-koa2/manager-server/node_modules/koa/node_modules/koa-compose/index.js:42:32)
+    at filter (/Users/luzheng/Desktop/练习/Vue练习/vue3.0-koa2/manager-server/node_modules/koa-json/index.js:25:12)
+    at dispatch (/Users/luzheng/Desktop/练习/Vue练习/vue3.0-koa2/manager-server/node_modules/koa/node_modules/koa-compose/index.js:42:32)
+    at bodyParser (/Users/luzheng/Desktop/练习/Vue练习/vue3.0-koa2/manager-server/node_modules/koa-bodyparser/index.js:95:11)
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)
