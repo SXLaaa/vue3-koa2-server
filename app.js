@@ -8,6 +8,8 @@ const logger = require('koa-logger') // 作用：打印后台日志
 const log4js = require('./utils/log4j')
 const users = require('./routes/users')
 const router = require('koa-router')()
+const koajwt  = require('koa-jwt')
+const utils = require('./utils/utils')
 
 // error handler
 onerror(app)
@@ -27,17 +29,26 @@ app.use(views(__dirname + '/views', {
 app.use(async (ctx, next) => {
   log4js.info(`get params:${JSON.stringify(ctx.request.query)}`)
   log4js.info(`post params:${JSON.stringify(ctx.request.body)}`)
-  await next()
+  await next().catch((err)=>{
+    if(err.status == '401'){
+      ctx.status = 200;
+      ctx.body = utils.fail('Token认证失败',utils.CODE.AUTH_ERROR)
+    }else{
+      throw err;
+    }
+  })
 })
-
-router.get('/menu/list',(ctx)=> {
-  ctx.body = 'hello'
-})
-router.get('/leave/count',(ctx)=> {
-  ctx.body = 'hello'
-})
+/**
+ * token拦截 中间件，任何接口进来会经过它过滤一下
+ * path: [/api/users/login]
+ * unless = 除了登陆接口不校验token
+*/
+app.use(koajwt({secret:'imooc'}).unless({
+  path: [/^\/api\/users\/login/]
+}))
 
 router.prefix("/api")
+
 router.use(users.routes(), users.allowedMethods()) // use 加载路由，并允许下面的所有方法
 app.use(router.routes(),router.allowedMethods())
 
