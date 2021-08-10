@@ -4,6 +4,7 @@
 const router = require('koa-router')()
 const util = require('../utils/utils')
 const User = require('../models/userSchema')
+const jwt = require('jsonwebtoken') // 生成token
 
 router.prefix('/users') // 定义二级路由
 
@@ -15,8 +16,13 @@ router.post('/login',async(ctx)=>{ // callBack回掉函数中，ctx可以拿到�
       userName,
       userPwd
     })
+    const data = res._doc;
+    const token = jwt.sign({
+      data:data,
+    },'imooc',{expiresIn: 30}) // imooc 密钥， expiresIn 时间30秒
     if(res){ // 判断res是true，输出
-      ctx.body = util.success(res)
+      data.token = token;
+      ctx.body = util.success(data)
     }else{
       ctx.body = util.fail("帐号或密码不正确")
     }

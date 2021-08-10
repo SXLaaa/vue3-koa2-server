@@ -30,6 +30,13 @@ app.use(async (ctx, next) => {
   await next()
 })
 
+router.get('/menu/list',(ctx)=> {
+  ctx.body = 'hello'
+})
+router.get('/leave/count',(ctx)=> {
+  ctx.body = 'hello'
+})
+
 router.prefix("/api")
 router.use(users.routes(), users.allowedMethods()) // use 加载路由，并允许下面的所有方法
 app.use(router.routes(),router.allowedMethods())
