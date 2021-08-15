@@ -4,6 +4,8 @@
 const router = require("koa-router")();
 const util = require("../utils/utils");
 const User = require("../models/userSchema");
+const Counter = require("../models/counterSchema");
+const md5 = require("md5");
 const jwt = require("jsonwebtoken"); // 生成token
 
 router.prefix("/users"); // 定义二级路由
@@ -97,6 +99,39 @@ router.post("/operate", async (ctx) => {
       // 判断必填为空
       ctx.body = util.fail("参数错误", util.CODE.PARAM_ERROR);
       return;
+    }
+    const res = await User.findOne(
+      { $or: [{ userName }, { userEmail }] },
+      "_id userName userEmail"
+    );
+    if (res) {
+      ctx.body = util.fail(
+        `系统监测到有重复的用户，信息如下:${res.userName} - ${res.userEmail}`
+      );
+    } else {
+      const doc = await Counter.findOneAndUpdate(
+        // 意思：每次去查找表里面的userId，并且+1, 最后返回新的集合
+        { _id: "userId" },
+        { $inc: { sequence_value: 1 } },
+        { new: true }
+      );
+      try {
+        const user = new User({
+          userId: doc.sequence_value,
+          userName,
+          userPwd: md5("12345"),
+          userEmail,
+          role: 1, // 默认普通用户
+          roleList,
+          job,
+          deptId,
+          mobile,
+        });
+        user.save();
+        ctx.body = util.success("", "用户创建成功");
+      } catch (error) {
+        ctx.body = util.fail(erro.stack, "用户创建失败");
+      }
     }
   } else {
     if (!deptId) {

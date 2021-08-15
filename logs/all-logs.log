@@ -232,3 +232,90 @@
 [2021-08-15T20:11:59.796] [INFO] info - post params:{"state":1,"roleList":["60180b07b1eaed6c45fbebdb"],"deptId":["60167059c9027b7d2c520a61","60167345c6a4417f2d27506f"],"role":0,"createTime":"2021-01-17T13:32:06.381Z","lastLoginTime":"2021-01-17T13:32:06.381Z","userId":1000002,"userName":"admin","userEmail":"admin@imooc.com@imooc.com","__v":0,"job":"前端","mobile":"17611020001","action":"edit"}
 [2021-08-15T20:11:59.847] [INFO] info - get params:{"state":"0","pageNum":"1","pageSize":"10","total":"2"}
 [2021-08-15T20:11:59.848] [INFO] info - post params:{}
+[2021-08-15T20:15:16.811] [INFO] info - **数据库连接成功**
+[2021-08-15T20:15:42.349] [INFO] info - **数据库连接成功**
+[2021-08-15T20:36:43.407] [INFO] info - get params:{"state":"0","pageNum":"1","pageSize":"10"}
+[2021-08-15T20:36:43.408] [INFO] info - post params:{}
+[2021-08-15T21:12:17.206] [INFO] info - **数据库连接成功**
+[2021-08-15T21:12:18.347] [INFO] info - **数据库连接成功**
+[2021-08-15T21:12:29.923] [INFO] info - **数据库连接成功**
+[2021-08-15T21:12:47.691] [INFO] info - **数据库连接成功**
+[2021-08-15T21:12:49.066] [INFO] info - **数据库连接成功**
+[2021-08-15T21:12:57.715] [INFO] info - **数据库连接成功**
+[2021-08-15T21:13:00.281] [INFO] info - **数据库连接成功**
+[2021-08-15T21:13:42.405] [INFO] info - **数据库连接成功**
+[2021-08-15T21:14:00.297] [INFO] info - **数据库连接成功**
+[2021-08-15T21:14:25.427] [INFO] info - **数据库连接成功**
+[2021-08-15T21:15:02.557] [INFO] info - **数据库连接成功**
+[2021-08-15T21:15:16.080] [INFO] info - **数据库连接成功**
+[2021-08-15T21:15:46.374] [INFO] info - **数据库连接成功**
+[2021-08-15T21:16:47.153] [INFO] info - **数据库连接成功**
+[2021-08-15T21:17:43.033] [INFO] info - **数据库连接成功**
+[2021-08-15T21:21:23.066] [INFO] info - **数据库连接成功**
+[2021-08-15T21:21:46.968] [INFO] info - **数据库连接成功**
+[2021-08-15T21:21:59.051] [INFO] info - **数据库连接成功**
+[2021-08-15T21:22:38.297] [INFO] info - **数据库连接成功**
+[2021-08-15T21:22:57.091] [INFO] info - **数据库连接成功**
+[2021-08-15T21:23:00.790] [INFO] info - **数据库连接成功**
+[2021-08-15T21:25:11.747] [INFO] info - get params:{}
+[2021-08-15T21:25:11.747] [INFO] info - post params:{"state":3,"roleList":[],"userName":"1","userEmail":"1@imooc.com","deptId":["60167059c9027b7d2c520a61","6016728fc6a4417f2d27506e"],"action":"add"}
+[2021-08-15T21:25:24.399] [INFO] info - get params:{}
+[2021-08-15T21:25:24.399] [INFO] info - post params:{"userName":"admin","userPwd":"admin"}
+[2021-08-15T21:25:28.777] [INFO] info - get params:{"state":"0","pageNum":"1","pageSize":"10"}
+[2021-08-15T21:25:28.777] [INFO] info - post params:{}
+[2021-08-15T21:25:36.532] [INFO] info - get params:{}
+[2021-08-15T21:25:36.532] [INFO] info - post params:{"state":3,"roleList":[],"userName":"1","userEmail":"1@imooc.com","deptId":["60167059c9027b7d2c520a61","6016728fc6a4417f2d27506e"],"action":"add"}
+[2021-08-15T21:25:37.532] [INFO] info - get params:{}
+[2021-08-15T21:25:37.533] [INFO] info - post params:{"state":3,"roleList":[],"userName":"1","userEmail":"1@imooc.com@imooc.com","deptId":["60167059c9027b7d2c520a61","6016728fc6a4417f2d27506e"],"action":"add"}
+[2021-08-15T21:25:38.790] [INFO] info - get params:{}
+[2021-08-15T21:25:38.790] [INFO] info - post params:{"state":3,"roleList":[],"userName":"1","userEmail":"1@imooc.com@imooc.com@imooc.com","deptId":["60167059c9027b7d2c520a61","6016728fc6a4417f2d27506e"],"action":"add"}
+[2021-08-15T21:25:38.976] [INFO] info - get params:{}
+[2021-08-15T21:25:38.976] [INFO] info - post params:{"state":3,"roleList":[],"userName":"1","userEmail":"1@imooc.com@imooc.com@imooc.com@imooc.com","deptId":["60167059c9027b7d2c520a61","6016728fc6a4417f2d27506e"],"action":"add"}
+[2021-08-15T21:25:39.163] [INFO] info - get params:{}
+[2021-08-15T21:25:39.164] [INFO] info - post params:{"state":3,"roleList":[],"userName":"1","userEmail":"1@imooc.com@imooc.com@imooc.com@imooc.com@imooc.com","deptId":["60167059c9027b7d2c520a61","6016728fc6a4417f2d27506e"],"action":"add"}
+[2021-08-15T21:25:47.669] [INFO] info - get params:{}
+[2021-08-15T21:25:47.669] [INFO] info - post params:{"state":3,"roleList":[],"userName":"1","userEmail":"1wwq@imooc.com","deptId":["60167059c9027b7d2c520a61","6016728fc6a4417f2d27506e"],"action":"add"}
+[2021-08-15T21:25:48.808] [INFO] info - get params:{}
+[2021-08-15T21:25:48.808] [INFO] info - post params:{"state":3,"roleList":[],"userName":"1","userEmail":"1wwq@imooc.com@imooc.com","deptId":["60167059c9027b7d2c520a61","6016728fc6a4417f2d27506e"],"action":"add"}
+[2021-08-15T21:25:48.986] [INFO] info - get params:{}
+[2021-08-15T21:25:48.986] [INFO] info - post params:{"state":3,"roleList":[],"userName":"1","userEmail":"1wwq@imooc.com@imooc.com@imooc.com","deptId":["60167059c9027b7d2c520a61","6016728fc6a4417f2d27506e"],"action":"add"}
+[2021-08-15T21:25:55.485] [INFO] info - get params:{}
+[2021-08-15T21:25:55.485] [INFO] info - post params:{"state":3,"roleList":[],"userName":"1","userEmail":"1wwq@imooc.com@imooc.com@imooc.com@imooc.com","deptId":["60167059c9027b7d2c520a61","6016728fc6a4417f2d27506e"],"action":"add"}
+[2021-08-15T21:31:02.112] [INFO] info - **数据库连接成功**
+[2021-08-15T21:32:23.900] [INFO] info - **数据库连接成功**
+[2021-08-15T21:32:43.811] [INFO] info - **数据库连接成功**
+[2021-08-15T21:34:03.356] [INFO] info - **数据库连接成功**
+[2021-08-15T21:34:35.490] [INFO] info - **数据库连接成功**
+[2021-08-15T21:35:12.880] [INFO] info - **数据库连接成功**
+[2021-08-15T21:38:26.514] [INFO] info - **数据库连接成功**
+[2021-08-15T21:41:02.393] [INFO] info - **数据库连接成功**
+[2021-08-15T21:41:22.191] [INFO] info - **数据库连接成功**
+[2021-08-15T21:41:36.920] [INFO] info - **数据库连接成功**
+[2021-08-15T21:42:21.981] [INFO] info - **数据库连接成功**
+[2021-08-15T21:44:04.131] [INFO] info - **数据库连接成功**
+[2021-08-15T21:45:32.421] [INFO] info - get params:{"state":"0","pageNum":"1","pageSize":"10"}
+[2021-08-15T21:45:32.421] [INFO] info - post params:{}
+[2021-08-15T21:45:43.531] [INFO] info - **数据库连接成功**
+[2021-08-15T21:46:19.514] [INFO] info - **数据库连接成功**
+[2021-08-15T21:46:38.181] [INFO] info - **数据库连接成功**
+[2021-08-15T21:46:54.166] [INFO] info - **数据库连接成功**
+[2021-08-15T21:47:11.464] [INFO] info - get params:{"state":"0","pageNum":"1","pageSize":"10"}
+[2021-08-15T21:47:11.465] [INFO] info - post params:{}
+[2021-08-15T21:48:18.640] [INFO] info - **数据库连接成功**
+[2021-08-15T21:48:28.811] [INFO] info - **数据库连接成功**
+[2021-08-15T21:50:52.761] [INFO] info - **数据库连接成功**
+[2021-08-15T21:51:33.697] [INFO] info - **数据库连接成功**
+[2021-08-15T21:52:47.683] [INFO] info - get params:{}
+[2021-08-15T21:52:47.684] [INFO] info - post params:{"state":3,"roleList":["60180b07b1eaed6c45fbebdb"],"userName":"shiXl","userEmail":"shiXl@imooc.com","mobile":"15854299869","job":"前端","deptId":["60167059c9027b7d2c520a61","60167345c6a4417f2d27506f"],"action":"add"}
+[2021-08-15T21:52:47.767] [INFO] info - get params:{"state":"0","pageNum":"1","pageSize":"10","total":"2"}
+[2021-08-15T21:52:47.768] [INFO] info - post params:{}
+[2021-08-15T21:53:51.507] [INFO] info - get params:{"state":"1","pageNum":"1","pageSize":"10"}
+[2021-08-15T21:53:51.507] [INFO] info - post params:{}
+[2021-08-15T21:54:33.095] [INFO] info - get params:{}
+[2021-08-15T21:54:33.096] [INFO] info - post params:{"userIds":[1000003]}
+[2021-08-15T21:54:33.115] [INFO] info - get params:{"state":"1","pageNum":"1","pageSize":"10","total":"3"}
+[2021-08-15T21:54:33.115] [INFO] info - post params:{}
+[2021-08-15T21:54:36.576] [INFO] info - get params:{"state":"0","pageNum":"1","pageSize":"10","total":"2"}
+[2021-08-15T21:54:36.576] [INFO] info - post params:{}
+[2021-08-15T21:54:39.265] [INFO] info - get params:{"state":"1","pageNum":"1","pageSize":"10","total":"3"}
+[2021-08-15T21:54:39.265] [INFO] info - post params:{}
