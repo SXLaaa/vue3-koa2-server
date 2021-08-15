@@ -69,4 +69,14 @@ router.get("/list", async (ctx) => {
     ctx.body = util.fail(`查询异常:${error.stack}`);
   }
 });
+/*用户删除/批量删除*/
+router.post("/delete", async (ctx) => {
+  const { userIds } = ctx.request.body;
+  const res = await User.updateMany({ userId: { $in: userIds } }, { state: 2 });
+  if (res.nModified) {
+    ctx.body = util.success(res, `共删除成功${res.nModified}条`);
+    return;
+  }
+  ctx.body = util.fail("删除失败");
+});
 module.exports = router;
