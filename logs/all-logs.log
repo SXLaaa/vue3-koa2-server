@@ -319,3 +319,87 @@
 [2021-08-15T21:54:36.576] [INFO] info - post params:{}
 [2021-08-15T21:54:39.265] [INFO] info - get params:{"state":"1","pageNum":"1","pageSize":"10","total":"3"}
 [2021-08-15T21:54:39.265] [INFO] info - post params:{}
+[2021-08-16T22:59:58.380] [INFO] info - **数据库连接成功**
+[2021-08-16T23:02:34.938] [INFO] info - get params:{}
+[2021-08-16T23:02:34.939] [INFO] info - post params:{"userName":"admin","userPwd":"admin"}
+[2021-08-16T23:03:10.511] [INFO] info - get params:{"state":"1","pageNum":"1","pageSize":"10"}
+[2021-08-16T23:03:10.511] [INFO] info - post params:{}
+[2021-08-16T23:03:16.853] [INFO] info - get params:{"state":"1","pageNum":"1","pageSize":"10"}
+[2021-08-16T23:03:16.854] [INFO] info - post params:{}
+[2021-08-16T23:12:40.068] [INFO] info - get params:{"state":"1","pageNum":"1","pageSize":"10"}
+[2021-08-16T23:12:40.069] [INFO] info - post params:{}
+[2021-08-17T03:51:25.987] [INFO] info - **数据库连接成功**
+[2021-08-17T07:59:29.938] [INFO] info - get params:{"state":"1","pageNum":"1","pageSize":"10"}
+[2021-08-17T07:59:29.939] [INFO] info - post params:{}
+[2021-08-17T11:54:03.804] [INFO] info - get params:{"state":"1","pageNum":"1","pageSize":"10"}
+[2021-08-17T11:54:03.811] [INFO] info - post params:{}
+[2021-08-17T19:56:39.331] [INFO] info - get params:{"state":"1","pageNum":"1","pageSize":"10"}
+[2021-08-17T19:56:39.333] [INFO] info - post params:{}
+[2021-08-17T22:40:49.187] [INFO] info - get params:{"state":"1","pageNum":"1","pageSize":"10"}
+[2021-08-17T22:40:49.188] [INFO] info - post params:{}
+[2021-08-17T22:41:06.000] [INFO] info - get params:{}
+[2021-08-17T22:41:06.000] [INFO] info - post params:{"userName":"admin","userPwd":"admin"}
+[2021-08-21T17:15:54.777] [INFO] info - **数据库连接成功**
+[2021-08-21T17:18:36.592] [INFO] info - get params:{}
+[2021-08-21T17:18:36.593] [INFO] info - post params:{"userName":"login","userPwd":"login"}
+[2021-08-21T17:18:44.834] [INFO] info - get params:{}
+[2021-08-21T17:18:44.834] [INFO] info - post params:{"userName":"admin","userPwd":"admin"}
+[2021-08-21T17:21:22.573] [INFO] info - get params:{"state":"1","pageNum":"1","pageSize":"10"}
+[2021-08-21T17:21:22.573] [INFO] info - post params:{}
+[2021-08-21T17:21:46.242] [INFO] info - get params:{"state":"1","pageNum":"1","pageSize":"10"}
+[2021-08-21T17:21:46.242] [INFO] info - post params:{}
+[2021-08-21T21:55:31.128] [INFO] info - **数据库连接成功**
+[2021-08-21T21:56:14.112] [INFO] info - **数据库连接成功**
+[2021-08-21T21:57:24.681] [INFO] info - **数据库连接成功**
+[2021-08-21T21:58:20.076] [INFO] info - **数据库连接成功**
+[2021-08-21T21:58:27.356] [INFO] info - **数据库连接成功**
+[2021-08-21T21:58:29.266] [INFO] info - **数据库连接成功**
+[2021-08-21T21:58:34.474] [INFO] info - **数据库连接成功**
+[2021-08-21T21:59:19.662] [INFO] info - **数据库连接成功**
+[2021-08-21T22:00:58.442] [INFO] info - **数据库连接成功**
+[2021-08-21T22:01:04.256] [INFO] info - **数据库连接成功**
+[2021-08-21T22:01:13.080] [INFO] info - **数据库连接成功**
+[2021-08-21T22:01:23.091] [INFO] info - **数据库连接成功**
+[2021-08-21T22:01:29.057] [INFO] info - **数据库连接成功**
+[2021-08-21T22:01:30.676] [INFO] info - **数据库连接成功**
+[2021-08-21T22:01:35.191] [INFO] info - **数据库连接成功**
+[2021-08-21T22:01:57.644] [INFO] info - **数据库连接成功**
+[2021-08-21T22:02:31.849] [INFO] info - **数据库连接成功**
+[2021-08-21T22:03:46.280] [INFO] info - **数据库连接成功**
+[2021-08-21T22:48:11.484] [INFO] info - **数据库连接成功**
+[2021-08-21T22:48:17.154] [INFO] info - get params:{}
+[2021-08-21T22:48:17.155] [INFO] info - post params:{"menuType":1,"menuState":1,"menuName":"dd","icon":"dd","path":"d","action":"add"}
+[2021-08-21T22:50:34.292] [INFO] info - get params:{}
+[2021-08-21T22:50:34.293] [INFO] info - post params:{"userName":"admin","userPwd":"admin"}
+[2021-08-21T22:50:38.476] [INFO] info - get params:{"state":"1","pageNum":"1","pageSize":"10"}
+[2021-08-21T22:50:38.476] [INFO] info - post params:{}
+[2021-08-21T22:51:20.431] [INFO] info - get params:{}
+[2021-08-21T22:51:20.431] [INFO] info - post params:{"menuType":1,"menuState":1,"menuName":"ArcGIS","path":"/arcgis","component":"/arcgis","action":"add"}
+[2021-08-21T22:52:47.027] [INFO] info - get params:{}
+[2021-08-21T22:52:47.027] [INFO] info - post params:{"menuType":1,"menuState":1,"menuName":"测试","path":"","component":"","icon":"/test","action":"add"}
+[2021-08-21T22:53:53.061] [INFO] info - **数据库连接成功**
+[2021-08-21T22:53:56.732] [INFO] info - get params:{}
+[2021-08-21T22:53:56.732] [INFO] info - post params:{"menuType":1,"menuState":1,"menuName":"测试","path":"","component":"","icon":"/test","action":"add"}
+[2021-08-21T22:54:50.161] [INFO] info - **数据库连接成功**
+[2021-08-21T22:57:58.169] [INFO] info - **数据库连接成功**
+[2021-08-21T22:59:22.894] [INFO] info - **数据库连接成功**
+[2021-08-21T22:59:54.858] [INFO] info - **数据库连接成功**
+[2021-08-21T23:00:09.365] [INFO] info - **数据库连接成功**
+[2021-08-21T23:01:01.875] [INFO] info - **数据库连接成功**
+[2021-08-21T23:01:02.956] [INFO] info - **数据库连接成功**
+[2021-08-21T23:01:17.570] [INFO] info - **数据库连接成功**
+[2021-08-21T23:01:56.413] [INFO] info - **数据库连接成功**
+[2021-08-21T23:03:37.492] [INFO] info - **数据库连接成功**
+[2021-08-21T23:03:38.738] [INFO] info - **数据库连接成功**
+[2021-08-21T23:03:39.328] [INFO] info - **数据库连接成功**
+[2021-08-21T23:04:52.263] [INFO] info - **数据库连接成功**
+[2021-08-21T23:05:26.539] [INFO] info - **数据库连接成功**
+[2021-08-21T23:05:31.799] [INFO] info - **数据库连接成功**
+[2021-08-21T23:05:58.174] [INFO] info - **数据库连接成功**
+[2021-08-21T23:06:20.570] [INFO] info - **数据库连接成功**
+[2021-08-21T23:06:50.671] [INFO] info - **数据库连接成功**
+[2021-08-21T23:07:29.767] [INFO] info - **数据库连接成功**
+[2021-08-21T23:07:38.461] [INFO] info - **数据库连接成功**
+[2021-08-21T23:09:34.405] [INFO] info - get params:{}
+[2021-08-21T23:09:34.406] [INFO] info - post params:{"menuType":1,"menuState":1,"menuName":"22","path":"2","component":"2","icon":"2","action":"add"}
+[2021-08-21T23:13:45.480] [INFO] info - **数据库连接成功**

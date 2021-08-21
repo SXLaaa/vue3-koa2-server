@@ -130,7 +130,7 @@ router.post("/operate", async (ctx) => {
         user.save();
         ctx.body = util.success("", "用户创建成功");
       } catch (error) {
-        ctx.body = util.fail(erro.stack, "用户创建失败");
+        ctx.body = util.fail(error.stack, "用户创建失败");
       }
     }
   } else {
