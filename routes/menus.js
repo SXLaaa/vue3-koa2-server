@@ -21,7 +21,6 @@ function getTreeMenu(rootList, id, list) {
     if (String(item.parentId.slice().pop()) == String(id)) {
       // slice 不会改变原数组； pop尾部删除，会改变原数组
       // 判断数组第一个值是null，就说明是父级菜单
-      console.log(item._doc);
       list.push(item._doc); // _doc 指的是文档，当前这条数据; moongos语法，取子文档
     }
   }
