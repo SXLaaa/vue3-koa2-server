@@ -4,7 +4,7 @@
  * @Autor: shiXl
  * @Date: 2021-08-21 23:13:44
  * @LastEditors: shiXl
- * @LastEditTime: 2021-09-05 21:06:34
+ * @LastEditTime: 2021-11-07 18:49:53
  */
 const Koa = require("koa");
 const app = new Koa();
@@ -20,6 +20,7 @@ const utils = require("./utils/utils");
 const users = require("./routes/users");
 const menus = require("./routes/menus");
 const roles = require("./routes/roles"); // 角色路由
+const depts = require("./routes/depts"); // 部门路由
 
 // error handler
 onerror(app);
@@ -68,6 +69,7 @@ router.prefix("/api");
 router.use(users.routes(), users.allowedMethods()); // use 加载路由，并允许下面的所有方法
 router.use(menus.routes(), menus.allowedMethods());
 router.use(roles.routes(), roles.allowedMethods());
+router.use(depts.routes(), depts.allowedMethods());
 app.use(router.routes(), router.allowedMethods());
 
 // error-handling

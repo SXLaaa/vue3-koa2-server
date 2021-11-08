@@ -4,7 +4,7 @@
  * @Autor: shiXl
  * @Date: 2021-09-05 21:05:41
  * @LastEditors: shiXl
- * @LastEditTime: 2021-09-05 23:02:20
+ * @LastEditTime: 2021-09-05 23:23:38
  */
 /**
  * 用户管理模块
@@ -79,6 +79,18 @@ router.post("/operate", async (ctx) => {
     ctx.body = util.success(res, info);
   } catch (error) {
     ctx.body = util.fail(error.stack);
+  }
+});
+
+// 角色权限设置
+router.post("/update/permission", async (ctx) => {
+  const { _id, permissionList } = ctx.request.body;
+  try {
+    let params = { permissionList, update: new Date() };
+    let res = await Role.findByIdAndUpdate(_id, params);
+    ctx.body = util.success("", "权限设置成功");
+  } catch (error) {
+    ctx.body = util.fail("权限设置失败");
   }
 });
 

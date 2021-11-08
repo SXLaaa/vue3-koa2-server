@@ -1,3 +1,11 @@
+/*
+ * @Description:
+ * @Version: 2.0
+ * @Autor: shiXl
+ * @Date: 2021-08-21 23:13:44
+ * @LastEditors: shiXl
+ * @LastEditTime: 2021-09-08 10:15:18
+ */
 const router = require("koa-router")();
 const util = require("../utils/utils");
 const Menu = require("../models/menuSchema");
@@ -12,6 +20,7 @@ router.get("/list", async (ctx) => {
   let rootList = (await Menu.find(params)) || [];
   // rootList就是数据库中的menus表
   const permissionList = getTreeMenu(rootList, null, []);
+
   ctx.body = util.success(permissionList);
 });
 // 递归拼接树形列表
