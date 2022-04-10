@@ -4,7 +4,7 @@
  * @Autor: shiXl
  * @Date: 2021-08-21 23:13:44
  * @LastEditors: shiXl
- * @LastEditTime: 2021-11-07 18:49:53
+ * @LastEditTime: 2022-02-10 14:05:25
  */
 const Koa = require("koa");
 const app = new Koa();
@@ -21,6 +21,7 @@ const users = require("./routes/users");
 const menus = require("./routes/menus");
 const roles = require("./routes/roles"); // 角色路由
 const depts = require("./routes/depts"); // 部门路由
+const leave = require('./routes/leave'); // 休假路由
 
 // error handler
 onerror(app);
@@ -70,6 +71,7 @@ router.use(users.routes(), users.allowedMethods()); // use 加载路由，并允
 router.use(menus.routes(), menus.allowedMethods());
 router.use(roles.routes(), roles.allowedMethods());
 router.use(depts.routes(), depts.allowedMethods());
+router.use(leave.routes(), leave.allowedMethods());
 app.use(router.routes(), router.allowedMethods());
 
 // error-handling
