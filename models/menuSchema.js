@@ -1,5 +1,5 @@
 /*
- * @Description:
+ * @Description:菜单管理数据库
  * @Version: 2.0
  * @Autor: shiXl
  * @Date: 2021-08-21 23:13:44
@@ -27,4 +27,4 @@ const userSchema = mongoose.Schema({
     default: Date.now(),
   },
 });
-module.exports = mongoose.model("menu", userSchema, "menus"); // Schema约束对象和连接数据库
+module.exports = mongoose.model("menus", userSchema, "menus"); // Schema约束对象和连接数据库

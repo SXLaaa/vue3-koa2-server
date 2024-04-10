@@ -17,11 +17,12 @@ const log4js = require("./utils/log4j");
 const router = require("koa-router")();
 const koajwt = require("koa-jwt");
 const utils = require("./utils/utils");
-const users = require("./routes/users");
-const menus = require("./routes/menus");
+const users = require("./routes/users"); // 用户路由
+const menus = require("./routes/menus"); // 菜单路由
 const roles = require("./routes/roles"); // 角色路由
 const depts = require("./routes/depts"); // 部门路由
-const leave = require('./routes/leave'); // 休假路由
+const leave = require("./routes/leave"); // 休假路由
+const captcha = require("./routes/captcha"); // 验证码路由
 
 // error handler
 onerror(app);
@@ -55,16 +56,20 @@ app.use(async (ctx, next) => {
   });
 });
 /**
- * token拦截 中间件，任何接口进来会经过它过滤一下
+ * token拦截 中间件，任何接口进来会经过它过滤一下
  * path: [/api/users/login]
  * unless = 除了登陆接口不校验token
  */
-app.use(
-  koajwt({ secret: "imooc" }).unless({
-    path: [/^\/api\/users\/login/],
-  })
-);
-
+// 定义需要排除 JWT 验证的路径
+const excludedPaths = [
+  /^\/api\/users\/login$/,
+  /^\/api\/captcha\/.*$/, // 匹配所有以 /api/public/ 开头的路径
+];
+// 定义一个函数，用于检查路径是否应该跳过 JWT 验证
+function shouldSkipJwt(ctx) {
+  return excludedPaths.some((pathRegex) => pathRegex.test(ctx.path));
+}
+app.use(koajwt({ secret: "imooc" }).unless((ctx) => shouldSkipJwt(ctx)));
 router.prefix("/api");
 
 router.use(users.routes(), users.allowedMethods()); // use 加载路由，并允许下面的所有方法
@@ -72,6 +77,7 @@ router.use(menus.routes(), menus.allowedMethods());
 router.use(roles.routes(), roles.allowedMethods());
 router.use(depts.routes(), depts.allowedMethods());
 router.use(leave.routes(), leave.allowedMethods());
+router.use(captcha.routes(), captcha.allowedMethods());
 app.use(router.routes(), router.allowedMethods());
 
 // error-handling

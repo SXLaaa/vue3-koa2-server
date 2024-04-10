@@ -9,6 +9,7 @@
 const router = require("koa-router")();
 const util = require("../utils/utils");
 const Menu = require("../models/menuSchema");
+const log4js = require("../utils/log4j");
 
 router.prefix("/menu");
 // 菜单列表查询
@@ -26,6 +27,7 @@ router.get("/list", async (ctx) => {
 //菜单编辑、新增、删除
 router.post("/operate", async (ctx) => {
   const { _id, action, ...params } = ctx.request.body;
+
   let res, info;
   try {
     if (action == "add") {

@@ -7,4 +7,4 @@ const userSchema = mongoose.Schema({
   sequence_value: Number,
 });
 
-module.exports = mongoose.model("counter", userSchema, "counters");
+module.exports = mongoose.model("counters", userSchema, "counters");
