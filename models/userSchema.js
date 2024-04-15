@@ -34,7 +34,7 @@ const userSchema = mongoose.Schema({
   lastLoginTime: {
     type: Date,
     default: Date.now(),
-  },
+  }, // 最后登录时间
   remark: String,
 });
 

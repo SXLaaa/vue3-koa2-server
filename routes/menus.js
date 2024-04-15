@@ -27,7 +27,6 @@ router.get("/list", async (ctx) => {
 //菜单编辑、新增、删除
 router.post("/operate", async (ctx) => {
   const { _id, action, ...params } = ctx.request.body;
-
   let res, info;
   try {
     if (action == "add") {

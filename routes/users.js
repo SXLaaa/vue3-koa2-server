@@ -22,17 +22,20 @@ router.post("/login", async (ctx) => {
      * 2. {userId:1,_id:0}
      * 3. select('userId')
      */
-    const res = await User.findOne(
-      {
-        userName,
-        userPwd: md5(userPwd),
-      },
-      "userId userName userEmail state role deptId roleList"
-    );
-    log4js.info(`User.findOne:${res}`);
+    // 查找用户，同时检查用户状态是否为非离职状态（假设非离职状态用1、3表示）
+    const res = await User.findOne({
+      userName,
+      userPwd: md5(userPwd),
+      state: { $ne: 2 }, // $ne表示不等于，这里2表示离职状态
+    });
+    log4js.info(`User-login.findOne:${res}`);
     if (res) {
+      // 更新用户的最后登录时间
+      await User.updateOne(
+        { _id: res._id },
+        { $set: { lastLoginTime: new Date() } }
+      );
       const data = res._doc;
-
       const token = jwt.sign(
         {
           data,
@@ -44,7 +47,7 @@ router.post("/login", async (ctx) => {
       ctx.body = util.success(data);
     } else {
       log4js.info(`get params:${md5(userPwd)}`);
-      ctx.body = util.fail("账号或密码不正确");
+      ctx.body = util.fail("账号或密码不正确，或用户已离职");
     }
   } catch (error) {
     ctx.body = util.fail(error.msg);
@@ -104,6 +107,7 @@ router.post("/operate", async (ctx) => {
   const {
     userId,
     userName,
+    userPwd,
     userEmail,
     mobile,
     job,
@@ -132,11 +136,12 @@ router.post("/operate", async (ctx) => {
         { new: true }
       );
       log4js.info(`User.sequence_value:${doc}`);
+      log4js.info(`User.userPwd:${userPwd}`);
       try {
         const user = new User({
           userId: doc.sequence_value,
           userName,
-          userPwd: md5("123456"),
+          userPwd: md5(userPwd) || md5("123456"),
           userEmail,
           role: 1, //默认普通用户
           roleList,
@@ -174,6 +179,27 @@ router.get("/getPermissionList", async (ctx) => {
   let menuList = await getMenuList(data.role, data.roleList);
   let actionList = getAction(JSON.parse(JSON.stringify(menuList)));
   ctx.body = util.success({ menuList, actionList });
+});
+// 用户密码修改
+router.post("/updatePwd", async (ctx) => {
+  const { userName, currentPassword, newPassword } = ctx.request.body;
+  if (!userName || !currentPassword || !newPassword) {
+    ctx.body = util.fail("缺少必要的参数");
+    return;
+  }
+  // 验证旧密码
+  const user = await User.findOne({ userName, userPwd: md5(currentPassword) });
+  if (!user) {
+    ctx.body = util.fail("原密码不正确");
+    return;
+  }
+  try {
+    // 更新新密码
+    await User.updateOne({ userName }, { userPwd: md5(newPassword) });
+    ctx.body = util.success("密码修改成功");
+  } catch (error) {
+    ctx.body = util.fail("密码修改失败：" + error.message);
+  }
 });
 async function getMenuList(userRole, roleKeys) {
   let rootList = [];
@@ -215,4 +241,5 @@ function getAction(list) {
   deep(list);
   return actionList;
 }
+
 module.exports = router;
