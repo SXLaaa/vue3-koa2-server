@@ -1,0 +1,60 @@
+Arguments: 
+  /usr/local/bin/node /usr/local/bin/yarn
+
+PATH: 
+  /Users/luzheng/Library/Application Support/cloud-code/installer/google-cloud-sdk/bin:/Library/Frameworks/Python.framework/Versions/3.8/bin:/Library/Frameworks/Python.framework/Versions/3.8/bin:/Library/Frameworks/Python.framework/Versions/3.7/bin:/Library/Frameworks/Python.framework/Versions/3.8/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/luzheng/Library/Application Support/cloud-code/installer/google-cloud-sdk/bin:/Library/Frameworks/Python.framework/Versions/3.8/bin:/Library/Frameworks/Python.framework/Versions/3.7/bin:/usr/local/mysql/bin:/Users/luzheng/mongoDB/bin:/usr/local/mysql/bin:/Users/luzheng/mongoDB/bin
+
+Yarn version: 
+  1.22.18
+
+Node version: 
+  18.19.0
+
+Platform: 
+  darwin x64
+
+Trace: 
+  Error: https://registry.npmmirror.com/debug: ETIMEDOUT
+      at Timeout._onTimeout (/usr/local/lib/node_modules/yarn/lib/cli.js:141543:19)
+      at listOnTimeout (node:internal/timers:569:17)
+      at process.processTimers (node:internal/timers:512:7)
+
+npm manifest: 
+  {
+    "name": "manager-server",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+      "start": "node bin/www",
+      "dev": "./node_modules/.bin/nodemon bin/www",
+      "prd": "pm2 start bin/www",
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "dependencies": {
+      "debug": "^4.1.1",
+      "jsonwebtoken": "^8.5.1",
+      "koa": "^2.7.0",
+      "koa-bodyparser": "^4.2.1",
+      "koa-convert": "^1.2.0",
+      "koa-json": "^2.0.2",
+      "koa-jwt": "^4.0.1",
+      "koa-logger": "^3.2.0",
+      "koa-onerror": "^4.1.0",
+      "koa-router": "^7.4.0",
+      "koa-static": "^5.0.0",
+      "koa-views": "^6.2.0",
+      "mongoose": "^5.13.5",
+      "pug": "^2.0.3"
+    },
+    "devDependencies": {
+      "log4js": "^6.3.0",
+      "md5": "^2.3.0",
+      "nodemon": "^1.19.1"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

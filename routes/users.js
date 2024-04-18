@@ -220,7 +220,10 @@ async function getMenuList(userRole, roleKeys) {
     permissionList = [...new Set(permissionList)];
     rootList = await Menu.find({ _id: { $in: permissionList } });
   }
-  return util.getTreeMenu(rootList, null, []);
+
+  // 解包数据
+  const unwrappedRootList = rootList.map(item => item._doc || item);
+  return util.getTreeMenu(unwrappedRootList, null, []);
 }
 
 function getAction(list) {

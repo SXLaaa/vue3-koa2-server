@@ -3,8 +3,8 @@
  * @Version: 2.0
  * @Autor: shiXl
  * @Date: 2021-08-15 17:25:32
- * @LastEditors: shiXl
- * @LastEditTime: 2022-04-10 10:18:12
+ * @LastEditors: shixl shixl@dist.com.cn
+ * @LastEditTime: 2024-04-19 00:17:39
  */
 /**
  * 通用工具函数
@@ -62,25 +62,43 @@ module.exports = {
     return "";
   },
   // 递归拼接树形列表
-  getTreeMenu(rootList, id, list) {
-    for (let i = 0; i < rootList.length; i++) {
-      let item = rootList[i];
-      if (String(item.parentId.slice().pop()) == String(id)) {
-        list.push(item._doc);
-      }
-    }
-    list.map((item) => {
-      item.children = [];
-      this.getTreeMenu(rootList, item._id, item.children);
-      if (item.children.length == 0) {
-        delete item.children;
-      } else if (item.children.length > 0 && item.children[0].menuType == 2) {
-        // 快速区分按钮和菜单，用于后期做菜单按钮权限控制
-        item.action = item.children;
+  getTreeMenu(rootList) {
+    const idToNodeMap = new Map();
+    const topMenuNodes = [];
+
+    // 初始化映射表并寻找顶级菜单
+    rootList.forEach(item => {
+      const unwrappedItem = item._doc || item; // 解包数据
+      idToNodeMap.set(unwrappedItem._id, { ...unwrappedItem, children: [], action: [] });
+
+      // 判断是否为顶级菜单
+      const isTopLevel = !unwrappedItem.parentId || (Array.isArray(unwrappedItem.parentId) && unwrappedItem.parentId.length === 0);
+      if (isTopLevel && unwrappedItem.menuType === 1) {
+        topMenuNodes.push(idToNodeMap.get(unwrappedItem._id));
       }
     });
-    return list;
-  },
+
+    // 构建树形结构
+    function buildChildren(list, parentNode) {
+      list.forEach(item => {
+        if (Array.isArray(item.parentId) && item.parentId.includes(parentNode._id)) {
+          const node = idToNodeMap.get(item._id);
+
+          if (node.menuType === 1) {
+            parentNode.children.push(node);
+            buildChildren(list, node);
+          } else if (node.menuType === 2) {
+            parentNode.action.push(node);
+          }
+        }
+      });
+    }
+
+    topMenuNodes.forEach(topNode => buildChildren(rootList, topNode));
+
+    return topMenuNodes;
+  }
+  ,
   formateDate(date, rule) {
     let fmt = rule || "yyyy-MM-dd hh:mm:ss";
     if (/(y+)/.test(fmt)) {
