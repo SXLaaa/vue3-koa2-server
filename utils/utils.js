@@ -65,8 +65,12 @@ module.exports = {
   getTreeMenu(rootList, id, list) {
     for (let i = 0; i < rootList.length; i++) {
       let item = rootList[i];
-      if (String(item.parentId.slice().pop()) == String(id)) {
-        list.push(item._doc);
+      // 先检查parentId是否存在且至少有一个元素
+      if (Array.isArray(item.parentId) && item.parentId.length > 0) {
+        const parentId = item.parentId.slice(-1)[0]; // 更推荐使用这种方法获取最后一个元素
+        if (String(parentId) === String(id)) {
+          list.push(item._doc);
+        }
       }
     }
     list.map((item) => {
