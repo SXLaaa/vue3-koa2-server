@@ -3838,3 +3838,298 @@
 [2024-04-19T00:18:21.197] [INFO] info - post params:{}
 [2024-04-19T00:18:21.204] [INFO] info - get params:{}
 [2024-04-19T00:18:21.204] [INFO] info - post params:{}
+[2024-11-10T10:16:31.202] [INFO] info - **数据库连接成功**
+[2024-11-10T10:24:15.247] [INFO] info - **数据库连接成功**
+[2024-11-10T10:28:34.251] [INFO] info - get params:{}
+[2024-11-10T10:28:34.251] [INFO] info - post params:{}
+[2024-11-10T10:28:44.575] [INFO] info - get params:{}
+[2024-11-10T10:28:44.575] [INFO] info - post params:{"userName":"管理员","userPwd":"admin","captcha":"Q7mo"}
+[2024-11-10T10:28:44.583] [INFO] info - getCaptcha params4:{
+  _id: 67301a52210e597070f98c86,
+  captchaText: 'Q7mo',
+  expiresAt: 2024-11-10T02:33:34.280Z,
+  __v: 0
+}
+[2024-11-10T10:28:44.687] [INFO] info - get params:{}
+[2024-11-10T10:28:44.688] [INFO] info - post params:{"userName":"管理员","userPwd":"admin","captcha":"Q7mo"}
+[2024-11-10T10:28:44.693] [INFO] info - User-login.findOne:{
+  deptId: [ '65d1f9a4f66eb050ec4e493c' ],
+  state: 1,
+  role: 1,
+  roleList: [ '65d0c8b51388403ba81aa28e' ],
+  createTime: 2024-02-17T15:07:41.178Z,
+  lastLoginTime: 2024-04-19T06:59:54.209Z,
+  _id: 65d0d056848da6578c813ae5,
+  userId: 10321,
+  userName: '管理员',
+  userPwd: '21232f297a57a5a743894a0e4a801fc3',
+  userEmail: 'guanliyuan@imooc.com',
+  __v: 0,
+  job: null,
+  mobile: null
+}
+[2024-11-10T10:28:44.975] [INFO] info - get params:{}
+[2024-11-10T10:28:44.976] [INFO] info - post params:{}
+[2024-11-10T10:28:45.027] [INFO] info - get params:{}
+[2024-11-10T10:28:45.028] [INFO] info - post params:{}
+[2024-11-10T10:28:52.779] [INFO] info - get params:{}
+[2024-11-10T10:28:52.780] [INFO] info - post params:{}
+[2024-11-10T10:28:52.984] [INFO] info - get params:{}
+[2024-11-10T10:28:52.985] [INFO] info - post params:{}
+[2024-11-10T10:28:52.987] [INFO] info - get params:{}
+[2024-11-10T10:28:52.988] [INFO] info - post params:{}
+[2024-11-10T10:28:53.734] [INFO] info - get params:{}
+[2024-11-10T10:28:53.735] [INFO] info - post params:{}
+[2024-11-10T10:28:53.954] [INFO] info - get params:{}
+[2024-11-10T10:28:53.955] [INFO] info - post params:{}
+[2024-11-10T10:28:53.957] [INFO] info - get params:{}
+[2024-11-10T10:28:53.958] [INFO] info - post params:{}
+[2024-11-10T10:29:02.717] [INFO] info - get params:{}
+[2024-11-10T10:29:02.717] [INFO] info - post params:{}
+[2024-11-10T10:29:02.910] [INFO] info - get params:{}
+[2024-11-10T10:29:02.911] [INFO] info - post params:{}
+[2024-11-10T10:29:02.913] [INFO] info - get params:{}
+[2024-11-10T10:29:02.913] [INFO] info - post params:{}
+[2024-11-10T10:34:29.625] [INFO] info - get params:{}
+[2024-11-10T10:34:29.625] [INFO] info - post params:{}
+[2024-11-10T10:34:29.831] [INFO] info - get params:{}
+[2024-11-10T10:34:29.831] [INFO] info - post params:{}
+[2024-11-10T10:34:29.835] [INFO] info - get params:{}
+[2024-11-10T10:34:29.835] [INFO] info - post params:{}
+[2024-11-10T10:40:25.098] [INFO] info - get params:{}
+[2024-11-10T10:40:25.098] [INFO] info - post params:{}
+[2024-11-10T10:40:45.189] [INFO] info - get params:{}
+[2024-11-10T10:40:45.189] [INFO] info - post params:{"userName":"管理员","userPwd":"admin","captcha":"wsb6"}
+[2024-11-10T10:40:45.191] [INFO] info - getCaptcha params4:{
+  _id: 67301d19210e597070f98ca3,
+  captchaText: 'wsb6',
+  expiresAt: 2024-11-10T02:45:25.102Z,
+  __v: 0
+}
+[2024-11-10T10:40:45.503] [INFO] info - get params:{}
+[2024-11-10T10:40:45.503] [INFO] info - post params:{"userName":"管理员","userPwd":"admin","captcha":"wsb6"}
+[2024-11-10T10:40:45.505] [INFO] info - User-login.findOne:{
+  deptId: [ '65d1f9a4f66eb050ec4e493c' ],
+  state: 1,
+  role: 1,
+  roleList: [ '65d0c8b51388403ba81aa28e' ],
+  createTime: 2024-02-17T15:07:41.178Z,
+  lastLoginTime: 2024-11-10T02:28:44.694Z,
+  _id: 65d0d056848da6578c813ae5,
+  userId: 10321,
+  userName: '管理员',
+  userPwd: '21232f297a57a5a743894a0e4a801fc3',
+  userEmail: 'guanliyuan@imooc.com',
+  __v: 0,
+  job: null,
+  mobile: null
+}
+[2024-11-10T10:40:45.768] [INFO] info - get params:{}
+[2024-11-10T10:40:45.768] [INFO] info - post params:{}
+[2024-11-10T10:40:45.844] [INFO] info - get params:{}
+[2024-11-10T10:40:45.844] [INFO] info - post params:{}
+[2024-11-10T10:43:42.154] [INFO] info - get params:{}
+[2024-11-10T10:43:42.154] [INFO] info - post params:{}
+[2024-11-10T10:43:42.353] [INFO] info - get params:{}
+[2024-11-10T10:43:42.353] [INFO] info - post params:{}
+[2024-11-10T10:43:42.356] [INFO] info - get params:{}
+[2024-11-10T10:43:42.357] [INFO] info - post params:{}
+[2024-11-10T10:44:16.476] [INFO] info - get params:{}
+[2024-11-10T10:44:16.476] [INFO] info - post params:{}
+[2024-11-10T10:44:16.684] [INFO] info - get params:{}
+[2024-11-10T10:44:16.684] [INFO] info - post params:{}
+[2024-11-10T10:44:16.687] [INFO] info - get params:{}
+[2024-11-10T10:44:16.687] [INFO] info - post params:{}
+[2024-11-10T10:45:04.221] [INFO] info - get params:{}
+[2024-11-10T10:45:04.221] [INFO] info - post params:{}
+[2024-11-10T10:45:04.442] [INFO] info - get params:{}
+[2024-11-10T10:45:04.442] [INFO] info - post params:{}
+[2024-11-10T10:45:04.446] [INFO] info - get params:{}
+[2024-11-10T10:45:04.446] [INFO] info - post params:{}
+[2024-11-10T10:49:20.824] [INFO] info - get params:{}
+[2024-11-10T10:49:20.824] [INFO] info - post params:{}
+[2024-11-10T10:49:21.020] [INFO] info - get params:{}
+[2024-11-10T10:49:21.020] [INFO] info - post params:{}
+[2024-11-10T10:49:21.022] [INFO] info - get params:{}
+[2024-11-10T10:49:21.022] [INFO] info - post params:{}
+[2024-11-10T10:50:08.789] [INFO] info - get params:{}
+[2024-11-10T10:50:08.789] [INFO] info - post params:{}
+[2024-11-10T10:50:10.394] [INFO] info - get params:{}
+[2024-11-10T10:50:10.394] [INFO] info - post params:{}
+[2024-11-10T10:50:10.396] [INFO] info - get params:{}
+[2024-11-10T10:50:10.396] [INFO] info - post params:{}
+[2024-11-10T10:56:45.637] [INFO] info - get params:{}
+[2024-11-10T10:56:45.638] [INFO] info - post params:{}
+[2024-11-10T10:56:45.851] [INFO] info - get params:{}
+[2024-11-10T10:56:45.851] [INFO] info - post params:{}
+[2024-11-10T10:56:45.855] [INFO] info - get params:{}
+[2024-11-10T10:56:45.855] [INFO] info - post params:{}
+[2024-11-10T10:58:02.047] [INFO] info - get params:{}
+[2024-11-10T10:58:02.047] [INFO] info - post params:{}
+[2024-11-10T10:58:02.265] [INFO] info - get params:{}
+[2024-11-10T10:58:02.265] [INFO] info - post params:{}
+[2024-11-10T10:58:02.268] [INFO] info - get params:{}
+[2024-11-10T10:58:02.268] [INFO] info - post params:{}
+[2024-11-10T10:58:09.393] [INFO] info - **数据库连接成功**
+[2024-11-10T10:58:13.278] [INFO] info - get params:{}
+[2024-11-10T10:58:13.279] [INFO] info - post params:{}
+[2024-11-10T10:58:13.469] [INFO] info - get params:{}
+[2024-11-10T10:58:13.469] [INFO] info - post params:{}
+[2024-11-10T10:58:13.475] [INFO] info - get params:{}
+[2024-11-10T10:58:13.475] [INFO] info - post params:{}
+[2024-11-10T10:59:02.278] [INFO] info - get params:{}
+[2024-11-10T10:59:02.279] [INFO] info - post params:{}
+[2024-11-10T10:59:02.479] [INFO] info - get params:{}
+[2024-11-10T10:59:02.479] [INFO] info - post params:{}
+[2024-11-10T10:59:02.483] [INFO] info - get params:{}
+[2024-11-10T10:59:02.483] [INFO] info - post params:{}
+[2024-11-10T10:59:16.079] [INFO] info - **数据库连接成功**
+[2024-11-10T10:59:18.358] [INFO] info - get params:{}
+[2024-11-10T10:59:18.359] [INFO] info - post params:{}
+[2024-11-10T10:59:18.364] [INFO] info - post params2222:{"deptId":["65d1f9a4f66eb050ec4e493c"],"state":1,"role":1,"roleList":["65d0c8b51388403ba81aa28e"],"createTime":"2024-02-17T15:07:41.178Z","lastLoginTime":"2024-11-10T02:28:44.694Z","_id":"65d0d056848da6578c813ae5","userId":10321,"userName":"管理员","userPwd":"21232f297a57a5a743894a0e4a801fc3","userEmail":"guanliyuan@imooc.com","__v":0,"job":null,"mobile":null}
+[2024-11-10T10:59:18.546] [INFO] info - get params:{}
+[2024-11-10T10:59:18.546] [INFO] info - post params:{}
+[2024-11-10T10:59:18.550] [INFO] info - get params:{}
+[2024-11-10T10:59:18.551] [INFO] info - post params:{}
+[2024-11-10T10:59:18.552] [INFO] info - post params2222:{"deptId":["65d1f9a4f66eb050ec4e493c"],"state":1,"role":1,"roleList":["65d0c8b51388403ba81aa28e"],"createTime":"2024-02-17T15:07:41.178Z","lastLoginTime":"2024-11-10T02:28:44.694Z","_id":"65d0d056848da6578c813ae5","userId":10321,"userName":"管理员","userPwd":"21232f297a57a5a743894a0e4a801fc3","userEmail":"guanliyuan@imooc.com","__v":0,"job":null,"mobile":null}
+[2024-11-10T11:00:08.488] [INFO] info - **数据库连接成功**
+[2024-11-10T11:04:18.712] [INFO] info - **数据库连接成功**
+[2024-11-10T11:04:20.644] [INFO] info - get params:{}
+[2024-11-10T11:04:20.645] [INFO] info - post params:{}
+[2024-11-10T11:04:20.836] [INFO] info - get params:{}
+[2024-11-10T11:04:20.837] [INFO] info - post params:{}
+[2024-11-10T11:04:20.840] [INFO] info - get params:{}
+[2024-11-10T11:04:20.841] [INFO] info - post params:{}
+[2024-11-10T11:05:23.392] [INFO] info - **数据库连接成功**
+[2024-11-10T11:05:25.396] [INFO] info - get params:{}
+[2024-11-10T11:05:25.396] [INFO] info - post params:{}
+[2024-11-10T11:05:25.606] [INFO] info - get params:{}
+[2024-11-10T11:05:25.606] [INFO] info - post params:{}
+[2024-11-10T11:05:25.613] [INFO] info - get params:{}
+[2024-11-10T11:05:25.613] [INFO] info - post params:{}
+[2024-11-10T15:01:09.494] [INFO] info - get params:{}
+[2024-11-10T15:01:09.495] [INFO] info - post params:{}
+[2024-11-10T15:01:10.405] [INFO] info - get params:{}
+[2024-11-10T15:01:10.406] [INFO] info - post params:{}
+[2024-11-10T15:01:10.411] [INFO] info - get params:{}
+[2024-11-10T15:01:10.411] [INFO] info - post params:{}
+[2024-11-10T15:01:12.225] [INFO] info - get params:{}
+[2024-11-10T15:01:12.225] [INFO] info - post params:{}
+[2024-11-10T15:07:51.632] [INFO] info - get params:{}
+[2024-11-10T15:07:51.632] [INFO] info - post params:{"userName":"管理员","userPwd":"admin","captcha":"inCB"}
+[2024-11-10T15:07:51.634] [INFO] info - getCaptcha params4:null
+[2024-11-10T15:07:54.398] [INFO] info - get params:{}
+[2024-11-10T15:07:54.398] [INFO] info - post params:{}
+[2024-11-10T15:07:59.856] [INFO] info - get params:{}
+[2024-11-10T15:07:59.857] [INFO] info - post params:{"userName":"管理员","userPwd":"admin","captcha":"nffx"}
+[2024-11-10T15:07:59.858] [INFO] info - getCaptcha params4:null
+[2024-11-10T15:08:01.355] [INFO] info - get params:{}
+[2024-11-10T15:08:01.356] [INFO] info - post params:{}
+[2024-11-10T15:08:08.071] [INFO] info - get params:{}
+[2024-11-10T15:08:08.071] [INFO] info - post params:{"userName":"管理员","userPwd":"admin","captcha":"5tv4"}
+[2024-11-10T15:08:08.074] [INFO] info - getCaptcha params4:{
+  _id: 67305bd1b208cb127c0ffb55,
+  captchaText: '5tv4',
+  expiresAt: 2024-11-10T07:13:01.359Z,
+  __v: 0
+}
+[2024-11-10T15:08:08.334] [INFO] info - get params:{}
+[2024-11-10T15:08:08.334] [INFO] info - post params:{"userName":"管理员","userPwd":"admin","captcha":"5tv4"}
+[2024-11-10T15:08:08.339] [INFO] info - User-login.findOne:{
+  deptId: [ '65d1f9a4f66eb050ec4e493c' ],
+  state: 1,
+  role: 1,
+  roleList: [ '65d0c8b51388403ba81aa28e' ],
+  createTime: 2024-02-17T15:07:41.178Z,
+  lastLoginTime: 2024-11-10T02:40:45.506Z,
+  _id: 65d0d056848da6578c813ae5,
+  userId: 10321,
+  userName: '管理员',
+  userPwd: '21232f297a57a5a743894a0e4a801fc3',
+  userEmail: 'guanliyuan@imooc.com',
+  __v: 0,
+  job: null,
+  mobile: null
+}
+[2024-11-10T15:08:08.381] [INFO] info - get params:{}
+[2024-11-10T15:08:08.381] [INFO] info - post params:{}
+[2024-11-10T15:08:08.677] [INFO] info - get params:{}
+[2024-11-10T15:08:08.677] [INFO] info - post params:{}
+[2024-11-10T15:08:21.059] [INFO] info - get params:{}
+[2024-11-10T15:08:21.059] [INFO] info - post params:{}
+[2024-11-10T15:08:21.284] [INFO] info - get params:{}
+[2024-11-10T15:08:21.284] [INFO] info - post params:{}
+[2024-11-10T15:08:21.285] [INFO] info - get params:{}
+[2024-11-10T15:08:21.286] [INFO] info - post params:{}
+[2024-11-10T15:09:20.574] [INFO] info - get params:{"roleName":"","total":"0","pageNum":"1","pageSize":"10"}
+[2024-11-10T15:09:20.575] [INFO] info - post params:{}
+[2024-11-10T15:09:20.878] [INFO] info - get params:{}
+[2024-11-10T15:09:20.878] [INFO] info - post params:{}
+[2024-11-10T15:09:21.848] [INFO] info - get params:{"state":"1","pageNum":"1","pageSize":"10"}
+[2024-11-10T15:09:21.848] [INFO] info - post params:{}
+[2024-11-10T15:09:22.013] [INFO] info - get params:{}
+[2024-11-10T15:09:22.013] [INFO] info - post params:{}
+[2024-11-10T15:09:22.151] [INFO] info - get params:{}
+[2024-11-10T15:09:22.151] [INFO] info - post params:{}
+[2024-11-10T15:09:23.691] [INFO] info - get params:{"deptName":""}
+[2024-11-10T15:09:23.692] [INFO] info - post params:{}
+[2024-11-10T15:09:23.993] [INFO] info - get params:{}
+[2024-11-10T15:09:23.993] [INFO] info - post params:{}
+[2024-11-10T15:09:24.796] [INFO] info - get params:{"menuState":"1"}
+[2024-11-10T15:09:24.797] [INFO] info - post params:{}
+[2024-11-10T15:11:28.106] [INFO] info - get params:{}
+[2024-11-10T15:11:28.106] [INFO] info - post params:{}
+[2024-11-10T15:11:35.464] [INFO] info - get params:{}
+[2024-11-10T15:11:35.465] [INFO] info - post params:{}
+[2024-11-10T15:11:35.832] [INFO] info - get params:{}
+[2024-11-10T15:11:35.833] [INFO] info - post params:{}
+[2024-11-10T15:11:35.834] [INFO] info - get params:{}
+[2024-11-10T15:11:35.834] [INFO] info - post params:{}
+[2024-11-10T15:13:06.644] [INFO] info - get params:{}
+[2024-11-10T15:13:06.644] [INFO] info - post params:{}
+[2024-11-10T15:13:07.027] [INFO] info - get params:{}
+[2024-11-10T15:13:07.027] [INFO] info - post params:{}
+[2024-11-10T15:13:07.029] [INFO] info - get params:{}
+[2024-11-10T15:13:07.029] [INFO] info - post params:{}
+[2024-11-10T15:13:37.949] [INFO] info - get params:{}
+[2024-11-10T15:13:37.949] [INFO] info - post params:{}
+[2024-11-10T15:13:38.548] [INFO] info - get params:{}
+[2024-11-10T15:13:38.548] [INFO] info - post params:{}
+[2024-11-10T15:13:38.552] [INFO] info - get params:{}
+[2024-11-10T15:13:38.553] [INFO] info - post params:{}
+[2024-11-10T15:13:41.208] [INFO] info - get params:{}
+[2024-11-10T15:13:41.208] [INFO] info - post params:{}
+[2024-11-10T15:13:41.602] [INFO] info - get params:{}
+[2024-11-10T15:13:41.602] [INFO] info - post params:{}
+[2024-11-10T15:13:41.604] [INFO] info - get params:{}
+[2024-11-10T15:13:41.604] [INFO] info - post params:{}
+[2024-11-10T15:14:09.151] [INFO] info - get params:{}
+[2024-11-10T15:14:09.151] [INFO] info - post params:{}
+[2024-11-10T15:14:09.529] [INFO] info - get params:{}
+[2024-11-10T15:14:09.530] [INFO] info - post params:{}
+[2024-11-10T15:14:09.531] [INFO] info - get params:{}
+[2024-11-10T15:14:09.532] [INFO] info - post params:{}
+[2024-11-10T15:14:13.423] [INFO] info - get params:{}
+[2024-11-10T15:14:13.424] [INFO] info - post params:{}
+[2024-11-10T15:14:13.802] [INFO] info - get params:{}
+[2024-11-10T15:14:13.802] [INFO] info - post params:{}
+[2024-11-10T15:14:13.803] [INFO] info - get params:{}
+[2024-11-10T15:14:13.804] [INFO] info - post params:{}
+[2024-11-10T15:14:50.295] [INFO] info - get params:{}
+[2024-11-10T15:14:50.295] [INFO] info - post params:{}
+[2024-11-10T15:14:50.629] [INFO] info - get params:{}
+[2024-11-10T15:14:50.630] [INFO] info - post params:{}
+[2024-11-10T15:14:50.631] [INFO] info - get params:{}
+[2024-11-10T15:14:50.631] [INFO] info - post params:{}
+[2024-11-10T15:14:52.400] [INFO] info - get params:{}
+[2024-11-10T15:14:52.400] [INFO] info - post params:{}
+[2024-11-10T15:14:52.750] [INFO] info - get params:{}
+[2024-11-10T15:14:52.750] [INFO] info - post params:{}
+[2024-11-10T15:14:52.752] [INFO] info - get params:{}
+[2024-11-10T15:14:52.752] [INFO] info - post params:{}
+[2024-11-10T15:15:06.840] [INFO] info - get params:{}
+[2024-11-10T15:15:06.840] [INFO] info - post params:{}
+[2024-11-10T15:15:07.657] [INFO] info - get params:{}
+[2024-11-10T15:15:07.657] [INFO] info - post params:{}
+[2024-11-10T15:15:07.659] [INFO] info - get params:{}
+[2024-11-10T15:15:07.659] [INFO] info - post params:{}

@@ -176,6 +176,7 @@ router.post("/operate", async (ctx) => {
 router.get("/getPermissionList", async (ctx) => {
   let authorization = ctx.request.headers.authorization;
   let { data } = util.decoded(authorization);
+
   let menuList = await getMenuList(data.role, data.roleList);
   let actionList = getAction(JSON.parse(JSON.stringify(menuList)));
   ctx.body = util.success({ menuList, actionList });
@@ -212,6 +213,11 @@ async function getMenuList(userRole, roleKeys) {
     let permissionList = [];
     roleList.map((role) => {
       let { checkedKeys, halfCheckedKeys } = role.permissionList;
+      console.log(
+        "🚀 ~ file: users.js:217 ~ roleList.map ~ checkedKeys, halfCheckedKeys:",
+        checkedKeys,
+        halfCheckedKeys
+      );
       permissionList = permissionList.concat([
         ...checkedKeys,
         ...halfCheckedKeys,
@@ -222,7 +228,7 @@ async function getMenuList(userRole, roleKeys) {
   }
 
   // 解包数据
-  const unwrappedRootList = rootList.map(item => item._doc || item);
+  const unwrappedRootList = rootList.map((item) => item._doc || item);
   return util.getTreeMenu(unwrappedRootList, null, []);
 }
 
