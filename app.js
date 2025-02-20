@@ -3,8 +3,8 @@
  * @Version: 2.0
  * @Autor: shiXl
  * @Date: 2021-08-21 23:13:44
- * @LastEditors: shiXl
- * @LastEditTime: 2022-02-10 14:05:25
+ * @LastEditors: shixiaolei
+ * @LastEditTime: 2025-02-20 10:04:00
  */
 const Koa = require("koa");
 const app = new Koa();
@@ -23,6 +23,7 @@ const roles = require("./routes/roles"); // 角色路由
 const depts = require("./routes/depts"); // 部门路由
 const leave = require("./routes/leave"); // 休假路由
 const captcha = require("./routes/captcha"); // 验证码路由
+const { createWebSocketServer } = require('./routes/websocket'); // deepSeek
 
 // error handler
 onerror(app);
@@ -84,5 +85,13 @@ app.use(router.routes(), router.allowedMethods());
 app.on("error", (err, ctx) => {
   log4js.error(`${err.stack}`); // 打印错误栈信息
 });
+
+// 创建 HTTP 服务器实例
+const server = app.listen(3001, () => {
+  console.log('Server is running on port 3001');
+});
+
+// 调用 createWebSocketServer 函数，将服务器实例传递进去
+const wss = createWebSocketServer(server);
 
 module.exports = app;
