@@ -3,3 +3,5 @@ logs
 data/db/
 .env
 config/ai.local.js
+
+.DS_Store
