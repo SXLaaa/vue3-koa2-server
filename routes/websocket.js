@@ -13,11 +13,12 @@ const deepSeekApiKey =
 const dashscopeApiKey =
   process.env.DASHSCOPE_API_KEY || localAiConfig.dashscopeApiKey;
 
+// 各模型客户端（按配置启用）
 const deepSeekClient = deepSeekApiKey
   ? new OpenAI({
       baseURL: "https://api.deepseek.com",
       apiKey: deepSeekApiKey,
-    })
+  })
   : null;
 
 const tongyiClient = dashscopeApiKey
@@ -49,19 +50,27 @@ const createWebSocketServer = (server) => {
 
     ws.on("message", async (message) => {
       let userMessage;
+      let normalizedUserMessage;
       try {
+        // 前端消息格式：{ role, content, modelType }
         userMessage = JSON.parse(message);
         if (!userMessage || !userMessage.content) {
           throw new Error("Invalid user message");
         }
 
+        normalizedUserMessage = {
+          role: userMessage.role,
+          content: userMessage.content,
+        };
+
+        // 默认走 DeepSeek
         if (deepSeekClient) {
           console.log("尝试调用DeepSeek API...");
           const deepSeekCompletion =
             await deepSeekClient.chat.completions.create({
               messages: [
                 { role: "system", content: "You are a helpful assistant." },
-                userMessage,
+                normalizedUserMessage,
               ],
               model: "deepseek-chat",
             });
@@ -69,6 +78,7 @@ const createWebSocketServer = (server) => {
           const deepSeekResponse = {
             role: "assistant",
             content: deepSeekCompletion.choices[0].message.content,
+            modelType: "deepseek",
           };
           ws.send(JSON.stringify(deepSeekResponse));
           return;
@@ -76,6 +86,7 @@ const createWebSocketServer = (server) => {
 
         throw new Error("DeepSeek client unavailable");
       } catch (deepSeekError) {
+        // 兜底回退到通义千问，避免全链路失败
         console.log("尝试调用阿里云通义千问 API...");
         try {
           if (!tongyiClient) {
@@ -87,8 +98,8 @@ const createWebSocketServer = (server) => {
             messages: [
               { role: "system", content: "You are a helpful assistant." },
               {
-                role: userMessage.role,
-                content: userMessage.content,
+                role: normalizedUserMessage.role,
+                content: normalizedUserMessage.content,
               },
             ],
           });
@@ -96,6 +107,7 @@ const createWebSocketServer = (server) => {
           const tongyiResponse = {
             role: "assistant",
             content: tongyiCompletion.choices[0].message.content,
+            modelType: "tongyi",
           };
           ws.send(JSON.stringify(tongyiResponse));
         } catch (tongyiError) {
@@ -103,6 +115,7 @@ const createWebSocketServer = (server) => {
             role: "assistant",
             content:
               "抱歉，AI 服务当前不可用，请检查 DEEPSEEK_API_KEY 或 DASHSCOPE_API_KEY 配置。",
+            modelType: "system",
           };
           ws.send(JSON.stringify(errorResponse));
         }

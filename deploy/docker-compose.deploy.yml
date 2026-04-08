@@ -1,0 +1,37 @@
+# 用途：线上云服务器部署（不在服务器 build，只使用已上传镜像）
+# 适用场景：本地先 buildx + docker save，再上传到 ECS/podman 机器运行
+# 启动命令：docker/podman compose -f docker-compose.deploy.yml -p my_project up -d
+services:
+  mongo:
+    image: mongo:latest
+    container_name: vue3-koa2-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  webserver:
+    image: my_project/webserver:latest
+    container_name: vue3-koa2-server
+    restart: unless-stopped
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/imooc-manager
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY:-}
+      - DASHSCOPE_API_KEY=${DASHSCOPE_API_KEY:-}
+    ports:
+      - "3000:3000"
+
+  web:
+    image: my_project/web:latest
+    container_name: vue3-koa2-web
+    restart: unless-stopped
+    depends_on:
+      - webserver
+    ports:
+      - "8080:80"
+
+volumes:
+  mongo-data:
