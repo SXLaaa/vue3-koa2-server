@@ -1,3 +1,5 @@
 node_modules
 logs
 data/db/
+.env
+config/ai.local.js
