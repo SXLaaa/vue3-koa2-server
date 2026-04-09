@@ -3,7 +3,7 @@ const OpenAI = require("openai");
 
 let localAiConfig = {};
 try {
-  localAiConfig = require("../config/ai.local");
+  localAiConfig = require("../config/ai.local.js");
 } catch (error) {
   localAiConfig = {};
 }
@@ -18,7 +18,7 @@ const deepSeekClient = deepSeekApiKey
   ? new OpenAI({
       baseURL: "https://api.deepseek.com",
       apiKey: deepSeekApiKey,
-  })
+    })
   : null;
 
 const tongyiClient = dashscopeApiKey
@@ -154,5 +154,5 @@ const createWebSocketServer = (server) => {
 };
 
 module.exports = {
-  createWebSocketServer
+  createWebSocketServer,
 };

@@ -33,7 +33,7 @@ router.post("/login", async (ctx) => {
       // 更新用户的最后登录时间
       await User.updateOne(
         { _id: res._id },
-        { $set: { lastLoginTime: new Date() } }
+        { $set: { lastLoginTime: new Date() } },
       );
       const data = res._doc;
       const token = jwt.sign(
@@ -41,7 +41,7 @@ router.post("/login", async (ctx) => {
           data,
         },
         "imooc",
-        { expiresIn: "1h" }
+        { expiresIn: "1h" },
       );
       data.token = token;
       ctx.body = util.success(data);
@@ -123,34 +123,36 @@ router.post("/operate", async (ctx) => {
     }
     const res = await User.findOne(
       { $or: [{ userName }, { userEmail }] },
-      "_id userName userEmail"
+      "_id userName userEmail",
     );
     if (res) {
       ctx.body = util.fail(
-        `系统监测到有重复的用户，信息如下：${res.userName} - ${res.userEmail}`
+        `系统监测到有重复的用户，信息如下：${res.userName} - ${res.userEmail}`,
       );
     } else {
       const doc = await Counter.findOneAndUpdate(
         { _id: "userId" },
         { $inc: { sequence_value: 1 } },
-        { new: true }
+        { new: true },
       );
       log4js.info(`User.sequence_value:${doc}`);
       log4js.info(`User.userPwd:${userPwd}`);
       try {
+        const pwdToHash =
+          typeof userPwd === "string" && userPwd.trim() ? userPwd : "123456";
         const user = new User({
           userId: doc.sequence_value,
           userName,
-          userPwd: md5(userPwd) || md5("123456"),
+          userPwd: md5(pwdToHash),
           userEmail,
-          role: 1, //默认普通用户
+          role: 1,
           roleList,
           job,
           state,
           deptId,
           mobile,
         });
-        user.save();
+        await user.save();
         ctx.body = util.success("", "用户创建成功");
       } catch (error) {
         ctx.body = util.fail(error.stack, "用户创建失败");
@@ -164,7 +166,7 @@ router.post("/operate", async (ctx) => {
     try {
       const res = await User.findOneAndUpdate(
         { userId },
-        { mobile, job, state, roleList, deptId }
+        { mobile, job, state, roleList, deptId },
       );
       ctx.body = util.success({}, "更新成功");
     } catch (error) {
@@ -222,7 +224,7 @@ async function getMenuList(userRole, roleKeys) {
   }
 
   // 解包数据
-  const unwrappedRootList = rootList.map(item => item._doc || item);
+  const unwrappedRootList = rootList.map((item) => item._doc || item);
   return util.getTreeMenu(unwrappedRootList, null, []);
 }
 
