@@ -7,17 +7,20 @@ const svgCaptcha = require("svg-captcha");
 
 // 生成验证码图片并存储到数据库
 router.get("/getCaptcha", async (ctx, next) => {
-  const captcha = svgCaptcha.create({
+  let captcha = svgCaptcha.create({
     size: 4,
     width: 120,
     height: 40,
     noise: 2,
   });
-  // 检查是否已存在相同的验证码
-  const existingCaptcha = await Captcha.findOne({ captchaText: captcha.text });
-  if (existingCaptcha) {
-    // 如果存在，则重新生成验证码
-    captcha.text = svgCaptcha.create().text;
+  // 若文本碰撞则整体验证码重建，避免 text 与 data 不一致
+  while (await Captcha.findOne({ captchaText: captcha.text })) {
+    captcha = svgCaptcha.create({
+      size: 4,
+      width: 120,
+      height: 40,
+      noise: 2,
+    });
   }
   const captchaDocument = new Captcha({
     captchaText: captcha.text,
@@ -26,7 +29,11 @@ router.get("/getCaptcha", async (ctx, next) => {
   // 将验证码ID存储到session中
   // ctx.session.captchaId = captchaDocument._id;
   await captchaDocument.save();
-  ctx.type = "image/svg+xml";
+  // 禁止缓存，确保每次都获取新的验证码
+  ctx.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+  ctx.set("Pragma", "no-cache");
+  ctx.set("Expires", "0");
+  ctx.type = "application/json";
   ctx.body = util.success(captcha.data);
 });
 

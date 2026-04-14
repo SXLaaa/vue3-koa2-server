@@ -10,14 +10,31 @@ try {
 
 const deepSeekApiKey =
   process.env.DEEPSEEK_API_KEY || localAiConfig.deepSeekApiKey;
+const openAiApiKey =
+  process.env.OPENAI_API_KEY ||
+  localAiConfig.openAiApiKey ||
+  localAiConfig.openaiApiKey;
 const dashscopeApiKey =
   process.env.DASHSCOPE_API_KEY || localAiConfig.dashscopeApiKey;
 
-// 各模型客户端（按配置启用）
+const deepSeekModel = process.env.DEEPSEEK_MODEL || "deepseek-chat";
+const openAiModel =
+  process.env.OPENAI_MODEL ||
+  localAiConfig.openAiModel ||
+  localAiConfig.openaiModel ||
+  "gpt-4o-mini";
+const tongyiModel = process.env.DASHSCOPE_MODEL || "qwen-plus";
+
 const deepSeekClient = deepSeekApiKey
   ? new OpenAI({
       baseURL: "https://api.deepseek.com",
       apiKey: deepSeekApiKey,
+    })
+  : null;
+
+const openAiClient = openAiApiKey
+  ? new OpenAI({
+      apiKey: openAiApiKey,
     })
   : null;
 
@@ -32,8 +49,67 @@ if (!deepSeekClient) {
   console.warn("DEEPSEEK_API_KEY 未配置，DeepSeek 能力已禁用");
 }
 
+if (!openAiClient) {
+  console.warn("OPENAI_API_KEY 未配置，GPT Plus 能力已禁用");
+}
+
 if (!tongyiClient) {
   console.warn("DASHSCOPE_API_KEY 未配置，通义千问回退能力已禁用");
+}
+
+async function requestByProvider(provider, normalizedUserMessage) {
+  const messages = [
+    { role: "system", content: "You are a helpful assistant." },
+    normalizedUserMessage,
+  ];
+
+  if (provider === "deepseek") {
+    if (!deepSeekClient) throw new Error("DeepSeek client unavailable");
+    const completion = await deepSeekClient.chat.completions.create({
+      messages,
+      model: deepSeekModel,
+    });
+    return {
+      role: "assistant",
+      content: completion.choices[0].message.content,
+      modelType: "deepseek",
+    };
+  }
+
+  if (provider === "openai") {
+    if (!openAiClient) throw new Error("OpenAI client unavailable");
+    const completion = await openAiClient.chat.completions.create({
+      messages,
+      model: openAiModel,
+    });
+    return {
+      role: "assistant",
+      content: completion.choices[0].message.content,
+      modelType: "openai",
+    };
+  }
+
+  if (provider === "tongyi") {
+    if (!tongyiClient) throw new Error("Tongyi client unavailable");
+    const completion = await tongyiClient.chat.completions.create({
+      messages,
+      model: tongyiModel,
+    });
+    return {
+      role: "assistant",
+      content: completion.choices[0].message.content,
+      modelType: "tongyi",
+    };
+  }
+
+  throw new Error(`Unsupported provider: ${provider}`);
+}
+
+function getProviderChain(modelType) {
+  if (modelType === "openai") {
+    return ["openai", "deepseek", "tongyi"];
+  }
+  return ["deepseek", "openai", "tongyi"];
 }
 
 // 创建 WebSocket 服务器
@@ -44,81 +120,52 @@ const createWebSocketServer = (server) => {
     console.error("WebSocket server error:", error);
   });
 
-  // 处理 WebSocket 连接
   wss.on("connection", (ws) => {
     console.log("Client connected");
 
     ws.on("message", async (message) => {
-      let userMessage;
-      let normalizedUserMessage;
       try {
-        // 前端消息格式：{ role, content, modelType }
-        userMessage = JSON.parse(message);
+        const userMessage = JSON.parse(message);
         if (!userMessage || !userMessage.content) {
           throw new Error("Invalid user message");
         }
 
-        normalizedUserMessage = {
-          role: userMessage.role,
+        const normalizedUserMessage = {
+          role: userMessage.role || "user",
           content: userMessage.content,
         };
+        const preferredModelType = userMessage.modelType || "deepseek";
+        const providers = getProviderChain(preferredModelType);
 
-        // 默认走 DeepSeek
-        if (deepSeekClient) {
-          console.log("尝试调用DeepSeek API...");
-          const deepSeekCompletion =
-            await deepSeekClient.chat.completions.create({
-              messages: [
-                { role: "system", content: "You are a helpful assistant." },
-                normalizedUserMessage,
-              ],
-              model: "deepseek-chat",
-            });
-
-          const deepSeekResponse = {
-            role: "assistant",
-            content: deepSeekCompletion.choices[0].message.content,
-            modelType: "deepseek",
-          };
-          ws.send(JSON.stringify(deepSeekResponse));
-          return;
+        for (const provider of providers) {
+          try {
+            const response = await requestByProvider(
+              provider,
+              normalizedUserMessage
+            );
+            ws.send(JSON.stringify(response));
+            return;
+          } catch (error) {
+            console.error(`[${provider}] 调用失败:`, error.message);
+          }
         }
 
-        throw new Error("DeepSeek client unavailable");
-      } catch (deepSeekError) {
-        // 兜底回退到通义千问，避免全链路失败
-        console.log("尝试调用阿里云通义千问 API...");
-        try {
-          if (!tongyiClient) {
-            throw new Error("Tongyi client unavailable");
-          }
-
-          const tongyiCompletion = await tongyiClient.chat.completions.create({
-            model: "qwen-plus",
-            messages: [
-              { role: "system", content: "You are a helpful assistant." },
-              {
-                role: normalizedUserMessage.role,
-                content: normalizedUserMessage.content,
-              },
-            ],
-          });
-
-          const tongyiResponse = {
-            role: "assistant",
-            content: tongyiCompletion.choices[0].message.content,
-            modelType: "tongyi",
-          };
-          ws.send(JSON.stringify(tongyiResponse));
-        } catch (tongyiError) {
-          const errorResponse = {
+        ws.send(
+          JSON.stringify({
             role: "assistant",
             content:
-              "抱歉，AI 服务当前不可用，请检查 DEEPSEEK_API_KEY 或 DASHSCOPE_API_KEY 配置。",
+              "抱歉，AI 服务当前不可用，请检查 OPENAI_API_KEY / DEEPSEEK_API_KEY / DASHSCOPE_API_KEY 配置。",
             modelType: "system",
-          };
-          ws.send(JSON.stringify(errorResponse));
-        }
+          })
+        );
+      } catch (error) {
+        ws.send(
+          JSON.stringify({
+            role: "assistant",
+            content: "请求格式错误，请稍后重试。",
+            modelType: "system",
+          })
+        );
       }
     });
 
@@ -131,12 +178,10 @@ const createWebSocketServer = (server) => {
     });
   });
 
-  // 将 WebSocket 集成到 HTTP 服务器
   server.on("upgrade", (request, socket, head) => {
     const { url = "" } = request;
 
     socket.on("error", (error) => {
-      // 浏览器主动中断握手时，避免未捕获异常导致进程退出
       console.error("Upgrade socket error:", error.message);
     });
 

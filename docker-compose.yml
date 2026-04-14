@@ -1,8 +1,6 @@
-# 用途：线上云服务器部署（不在服务器 build，只使用已上传镜像）
-# 适用场景：本地先 buildx + docker save，再上传到 ECS/podman 机器运行
-# 启动命令：docker/podman compose -f docker-compose.deploy.yml -p my_project up -d
-# 备注（本地执行上传并部署）：
-# bash scripts/build_and_ship_images.sh -i ~/.ssh/id_rsa admin 8.145.62.94 /www/wwwroot/vue3.0-koa2
+# 用途：本地开发/本地机器构建镜像并启动（会执行 build）
+# 适用场景：本机或可正常访问 DockerHub 的环境
+# 启动命令（在 vue3-koa2-server 目录执行）：docker compose --project-name my_project up -d --build
 services:
   mongo:
     image: mongo:latest
@@ -14,7 +12,9 @@ services:
       - mongo-data:/data/db
 
   webserver:
-    image: my_project/webserver:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: vue3-koa2-server
     restart: unless-stopped
     depends_on:
@@ -27,7 +27,9 @@ services:
       - "3000:3000"
 
   web:
-    image: my_project/web:latest
+    build:
+      context: ../vue3-koa2-web
+      dockerfile: Dockerfile
     container_name: vue3-koa2-web
     restart: unless-stopped
     depends_on:
