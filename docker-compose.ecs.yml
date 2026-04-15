@@ -1,0 +1,26 @@
+# 用途：阿里云 ECS / 线上环境覆盖配置（与 docker-compose.yml 叠加使用）
+# 示例：
+# 1) 手动构建镜像（推荐）
+#    podman build -t localhost/my_project_webserver:latest -f Dockerfile .
+#    cd ../vue3-koa2-web && podman build -t localhost/my_project_web:latest -f Dockerfile .
+# 2) 启动
+#    docker compose -f docker-compose.yml -f docker-compose.ecs.yml --project-name my_project --env-file .env up -d --no-build
+
+services:
+  mongo:
+    # 线上环境建议使用可访问镜像源；可按需替换为公司私有仓库
+    image: ${MONGO_IMAGE:-docker.m.daocloud.io/library/mongo:latest}
+
+  webserver:
+    # 明确指定本地镜像名，避免 podman-compose 把 my_project_webserver 当远程仓库拉取
+    image: localhost/my_project_webserver:latest
+    # 线上只需通过前端 Nginx 反向代理访问后端，不建议公网暴露 3000
+    ports:
+      - "127.0.0.1:3000:3000"
+
+  web:
+    # 明确指定本地镜像名，避免误拉远程
+    image: localhost/my_project_web:latest
+    # 对外入口
+    ports:
+      - "8080:80"
