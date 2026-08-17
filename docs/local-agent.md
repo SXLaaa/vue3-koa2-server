@@ -11,7 +11,7 @@ cd D:\国测海遥\vue3-koa2-server
 npm install
 ```
 
-启动 Ollama 和后端（端口 `3000`）：
+启动 Ollama 和 Agent 后端（端口 `3000`）：
 
 ```powershell
 cd D:\国测海遥\vue3-koa2-server
@@ -42,7 +42,7 @@ npm run local:stop
 
 `local:stop` 会停止 `3000` 端口，因此同端口上的业务后端也会一同停止；不会删除模型、会话或训练数据。
 
-本仓库的旧用户管理功能仍会尝试连接 MongoDB。MongoDB 未启动时，智能体接口仍可使用，但用户登录等数据库功能不可用，并会在控制台记录连接失败日志。
+`npm run local` 会以 Agent 本地模式跳过 MongoDB，因此无需安装数据库。该模式下用户登录等旧业务接口不可用；需要原业务功能时，先启动 MongoDB，再执行 `npm start`。
 
 ## 模型与学习数据位置
 

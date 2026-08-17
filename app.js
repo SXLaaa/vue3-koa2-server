@@ -12,7 +12,9 @@ const router = require('koa-router')()
 
 // error handler
 onerror(app)
-require('./config/db')
+if (process.env.MONGO_DISABLED !== '1') {
+  require('./config/db')
+}
 
 app.use(async (ctx, next) => {
   if (!ctx.path.startsWith('/api/agent')) {
