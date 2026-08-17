@@ -7,11 +7,29 @@ const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger') // 作用：打印后台日志
 const log4js = require('./utils/log4j')
 const users = require('./routes/users')
+const agent = require('./routes/agent')
 const router = require('koa-router')()
 
 // error handler
 onerror(app)
 require('./config/db')
+
+app.use(async (ctx, next) => {
+  if (!ctx.path.startsWith('/api/agent')) {
+    await next()
+    return
+  }
+
+  ctx.set('Access-Control-Allow-Origin', process.env.AGENT_CORS_ORIGIN || '*')
+  ctx.set('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+  ctx.set('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS')
+  if (ctx.method === 'OPTIONS') {
+    ctx.status = 204
+    return
+  }
+
+  await next()
+})
 // middlewares  
 app.use(bodyparser({
   enableTypes:['json', 'form', 'text'] // 接受前端传过来的参数格式
@@ -32,6 +50,7 @@ app.use(async (ctx, next) => {
 
 router.prefix("/api")
 router.use(users.routes(), users.allowedMethods()) // use 加载路由，并允许下面的所有方法
+router.use(agent.routes(), agent.allowedMethods())
 app.use(router.routes(),router.allowedMethods())
 
 // error-handling

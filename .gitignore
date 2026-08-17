@@ -1,2 +1,8 @@
 node_modules
 logs
+data/agent/*
+!data/agent/.gitkeep
+.env
+local-agent.config.json
+npm-debug.log*
+yarn-error.log*
