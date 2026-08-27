@@ -2,6 +2,8 @@
 
 本工具默认只做 deterministic dry-run：读取本地文件、校验字段与几何、统一为 `MultiPolygon`、生成稳定 `feature_key` 和幂等 upsert SQL，不发起网络请求，也不会自动连接数据库。
 
+需要执行 `--apply` 时，`psql` 按 `MAIN_GRAIN_PSQL`、当前 `PATH`、Windows 标准安装目录 `C:\Program Files\PostgreSQL\<版本>\bin\psql.exe` 的顺序解析。`MAIN_GRAIN_PSQL` 只能指向可执行文件，不得包含密码或连接串。
+
 ## 输入要求
 
 必填业务字段：

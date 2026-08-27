@@ -59,8 +59,24 @@ BEGIN
   END IF;
 
   SELECT count(*) INTO actual_count FROM map_service;
-  IF actual_count < 11 THEN
-    RAISE EXCEPTION 'expected map-service lookup coverage for 11 map-enabled pages, got %', actual_count;
+  IF actual_count < 10 THEN
+    RAISE EXCEPTION 'expected map-service lookup coverage for 10 map-enabled pages, got %', actual_count;
+  END IF;
+
+  SELECT count(*) INTO actual_count
+  FROM map_service
+  WHERE module_key = 'security' AND sub_id = 'plantingTask';
+  IF actual_count <> 0 THEN
+    RAISE EXCEPTION 'plantingTask map-service lookup must be empty, got %', actual_count;
+  END IF;
+
+  SELECT count(*) INTO actual_count
+  FROM dashboard_payload
+  WHERE module_key = 'security'
+    AND sub_id = 'plantingTask'
+    AND endpoint_key = 'getVectorTableWms';
+  IF actual_count <> 0 THEN
+    RAISE EXCEPTION 'plantingTask getVectorTableWms payload lookup must be empty, got %', actual_count;
   END IF;
 
   SELECT count(*) INTO actual_count FROM agricultural_feature;

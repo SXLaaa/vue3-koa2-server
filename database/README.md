@@ -4,10 +4,12 @@
 
 - `migrations/001_postgis_dashboard.up.sql`：启用 PostGIS，创建 6 张冻结表、唯一/查询/GiST 索引及空间归一化与计算函数。
 - `migrations/001_postgis_dashboard.down.sql`：按依赖逆序回滚本迁移对象；不删除可能被其他业务共享的 PostGIS 扩展。
-- `seeds/001_minimal_dashboard.sql`：覆盖 12 页面、33 接口、12 条时间轴、11 个地图服务查找及青岛代表性面数据。
+- `seeds/001_minimal_dashboard.sql`：覆盖 12 页面、33 接口、12 条时间轴、10 个地图服务查找及青岛代表性面数据；`security/plantingTask` 不创建假图层。
 - `verification/spatial-fixture.sql`：验证 `ST_Intersects`、`ST_Within`、`ST_Intersection` 与 `ST_Area(geom::geography)`。
 - `verification/live-verify.sql`：在迁移和种子已应用的本地库中核对表、几何列、索引和覆盖数量。
 - `verify.mjs`：无数据库时执行确定性验证；仅在显式 `--live` 且 URL 指向本机时调用 `psql`。
+
+`psql` 按以下顺序解析：显式环境变量 `MAIN_GRAIN_PSQL`、当前 `PATH`、Windows 标准安装目录 `C:\Program Files\PostgreSQL\<版本>\bin\psql.exe`（选择最高版本）。该变量只保存可执行文件路径，不得写入数据库密码或连接串。
 
 ## 无数据库验证
 

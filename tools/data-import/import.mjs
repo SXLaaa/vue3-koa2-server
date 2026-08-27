@@ -4,6 +4,7 @@ import { spawnSync } from 'node:child_process'
 import { csvToFeatures } from './lib/csv.mjs'
 import { normalizeFeature } from './lib/geometry.mjs'
 import { buildUpsertSql, sqlDigest } from './lib/sql.mjs'
+import { requirePsqlExecutable } from './lib/psql.mjs'
 
 function parseArguments(argv) {
   const options = {
@@ -130,7 +131,8 @@ function assertLocalDatabase(databaseUrl, allowed) {
 
 function applySql(sql, databaseUrl, allowed) {
   assertLocalDatabase(databaseUrl, allowed)
-  const result = spawnSync('psql', ['-X', '-v', 'ON_ERROR_STOP=1'], {
+  const { executable } = requirePsqlExecutable()
+  const result = spawnSync(executable, ['-X', '-v', 'ON_ERROR_STOP=1'], {
     input: sql,
     encoding: 'utf8',
     env: { ...process.env, DATABASE_URL: '', PGDATABASE: databaseUrl },

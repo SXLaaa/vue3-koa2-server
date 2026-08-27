@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { spawnSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
+import { requirePsqlExecutable, resolvePsqlExecutable } from '../tools/data-import/lib/psql.mjs'
 
 const databaseDir = path.dirname(fileURLToPath(import.meta.url))
 const worktree = path.resolve(databaseDir, '..')
@@ -46,8 +47,8 @@ function assertLocalDatabase(databaseUrl) {
   }
 }
 
-function runPsql(databaseUrl, file) {
-  const result = spawnSync('psql', ['-X', '-v', 'ON_ERROR_STOP=1', '-f', file], {
+function runPsql(databaseUrl, file, psqlExecutable) {
+  const result = spawnSync(psqlExecutable, ['-X', '-v', 'ON_ERROR_STOP=1', '-f', file], {
     cwd: path.dirname(file),
     encoding: 'utf8',
     env: { ...process.env, DATABASE_URL: '', PGDATABASE: databaseUrl },
@@ -105,6 +106,14 @@ try {
     if (!seed.includes(frozenValue)) errors.push(`种子缺少冻结契约值：${frozenValue}`)
   }
 
+  const mapServiceSeed = seed.match(/INSERT\s+INTO\s+map_service[\s\S]*?VALUES([\s\S]*?)ON\s+CONFLICT\s+DO\s+NOTHING;/iu)?.[1] ?? ''
+  const seedMapServices = (mapServiceSeed.match(/^\s*\('/gmu) ?? []).length
+  const plantingTaskMapServiceEmpty = !/'security'\s*,\s*'plantingTask'/u.test(mapServiceSeed)
+  const plantingTaskVectorWmsEmpty = !/\('security'\s*,\s*'plantingTask'\s*,\s*'getVectorTableWms'/u.test(seed)
+  if (seedMapServices !== 10) errors.push(`地图服务种子应为 10 条，实际 ${seedMapServices}`)
+  if (!plantingTaskMapServiceEmpty) errors.push('种植任务不应创建占位地图服务')
+  if (!plantingTaskVectorWmsEmpty) errors.push('种植任务 getVectorTableWms 应保持空查询')
+
   // 拒绝名单分段构造，避免交付物自身因保存完整禁用地址而触发字面扫描。
   const forbiddenValues = [
     ['27', '223', '102', '27'].join('.'),
@@ -118,15 +127,18 @@ try {
   if (forbidden.test(scanned)) errors.push('数据库产物包含禁用客户主机或外部地图标识')
   if (errors.length) throw new Error(errors.join('\n'))
 
+  const psqlResolution = resolvePsqlExecutable()
+
   let status = 'MANUAL_REQUIRED'
   let manualReason = '未提供本地 DATABASE_URL；已完成确定性静态、种子和导入 dry-run 验证，需在客户内网人工应用。'
   if (live) {
     const databaseUrl = process.env.DATABASE_URL?.trim()
     if (!databaseUrl) throw new Error('--live 需要本地 DATABASE_URL；不要提供或提交客户密码')
     assertLocalDatabase(databaseUrl)
-    runPsql(databaseUrl, paths.migration)
-    runPsql(databaseUrl, paths.seed)
-    runPsql(databaseUrl, paths.live)
+    const { executable } = requirePsqlExecutable()
+    runPsql(databaseUrl, paths.migration, executable)
+    runPsql(databaseUrl, paths.seed, executable)
+    runPsql(databaseUrl, paths.live, executable)
     status = 'PASS'
     manualReason = ''
   }
@@ -140,6 +152,11 @@ try {
     spatialOperations: operationChecks.map(([name]) => name),
     gistIndexes: gistIndexes.length,
     seedSpatialFeatures: (seed.match(/\('seed:[^']+'/gu) ?? []).length,
+    seedMapServices,
+    plantingTaskMapServiceEmpty,
+    plantingTaskVectorWmsEmpty,
+    psqlExecutable: psqlResolution.executable,
+    psqlResolution: psqlResolution.source,
     digests: {
       migration: digest(migration),
       rollback: digest(rollback),

@@ -116,6 +116,14 @@ VALUES
 ON CONFLICT DO NOTHING;
 
 -- 使用相对或本地占位 URL，既能验证查找维度，又不会把客户服务地址写入代码。
+-- 清理 Attempt 1 曾写入的种植任务占位服务；该页面由区县统计在前端着色，地图查询应为空。
+DELETE FROM map_service
+WHERE module_key = 'security'
+  AND sub_id = 'plantingTask'
+  AND category = 'planting_task'
+  AND server = 'local'
+  AND metadata @> '{"seed":true}'::jsonb;
+
 INSERT INTO map_service (
   module_key, sub_id, category, year, half_year, crop, stage, observation_date,
   server, service_type, service_url, layer_name, fallback_srs, metadata
@@ -124,7 +132,6 @@ VALUES
   ('farmland', 'cultivatedLand', 'farmland_monitoring', 2026, 1, NULL, NULL, NULL, 'local', 'wms', '/geoserver/main-grain/wms', 'main_grain:farmland_monitoring_2026', 'EPSG:4326', '{"seed":true}'),
   ('farmland', 'highStandard', 'high_standard_farmland', 2026, 1, NULL, NULL, NULL, 'local', 'wms', '/geoserver/main-grain/wms', 'main_grain:high_standard_farmland_2026', 'EPSG:4326', '{"seed":true}'),
   ('farmland', 'basicProtection', 'protection_monitoring', 2026, 1, NULL, NULL, NULL, 'local', 'wms', '/geoserver/main-grain/wms', 'main_grain:protection_monitoring_2026', 'EPSG:4326', '{"seed":true}'),
-  ('security', 'plantingTask', 'planting_task', 2026, 1, NULL, NULL, NULL, 'local', 'wms', '/geoserver/main-grain/wms', 'main_grain:planting_task_2026', 'EPSG:4326', '{"seed":true}'),
   ('security', 'cropDistribution', 'crop_distribution', 2026, 1, '小麦', NULL, NULL, 'local', 'wms', '/geoserver/main-grain/wms', 'main_grain:crop_distribution_2026_xm', 'EPSG:4326', '{"seed":true}'),
   ('security', 'yieldEstimate', 'crop_yield', 2026, 1, '小麦', NULL, NULL, 'local', 'wms', '/geoserver/main-grain/wms', 'main_grain:crop_yield_2026_xm', 'EPSG:4326', '{"seed":true}'),
   ('warning', 'growthStage', 'reproductive_period', 2026, NULL, '小麦', '灌浆期', DATE '2026-05-25', 'local', 'wms', '/geoserver/main-grain/wms', 'main_grain:reproductive_period_20260525_xm', 'EPSG:4326', '{"seed":true}'),
