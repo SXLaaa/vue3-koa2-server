@@ -84,7 +84,7 @@ test('地图元数据查询保留冻结的八个检索维度并返回空安全�
   const repository = createPostgresRepository({
     query: async (text, values) => {
       captured = { text, values }
-      return { rows: [{ service_url: '', layer_name: 'local:wheat', metadata: { extent: [0, 0, 1, 1] } }] }
+      return { rows: [{ service_url: '/tiles/{z}/{x}/{y}.png', layer_name: '', service_type: 'xyz', metadata: { extent: [0, 0, 1, 1] } }] }
     }
   })
   const context = {
@@ -94,7 +94,7 @@ test('地图元数据查询保留冻结的八个检索维度并返回空安全�
   }
 
   assert.deepEqual(await repository.findMapService(context), {
-    msg: 'local:wheat', extent: [0, 0, 1, 1], metadata: { extent: [0, 0, 1, 1] }
+    msg: '/tiles/{z}/{x}/{y}.png', extent: [0, 0, 1, 1], metadata: { extent: [0, 0, 1, 1] }
   })
   assert.deepEqual(captured.values, [
     'security', 'cropDistribution', 'crop_distribution', 2026, 1, '小麦', 'mature', '2026-06-01', 'local'

@@ -57,6 +57,41 @@ function buildReproductiveTimeline(rows) {
   }
 }
 
+function hasLayersParameter(serviceUrl) {
+  const queryStart = serviceUrl.indexOf('?')
+  if (queryStart < 0) return false
+  const fragmentStart = serviceUrl.indexOf('#', queryStart)
+  const query = serviceUrl.slice(queryStart + 1, fragmentStart < 0 ? undefined : fragmentStart)
+  return [...new URLSearchParams(query).keys()].some((key) => key.toLowerCase() === 'layers')
+}
+
+/**
+ * 将冻结表中分离存储的 WMS 地址与图层名合并成旧前端可直接解析的相对或绝对 URL。
+ */
+function mapServiceUrl(row) {
+  const serviceUrl = typeof row.service_url === 'string' ? row.service_url : ''
+  const layerName = typeof row.layer_name === 'string' ? row.layer_name : ''
+  if (row.service_type !== 'wms' || !serviceUrl || !layerName || hasLayersParameter(serviceUrl)) return serviceUrl
+
+  const fragmentStart = serviceUrl.indexOf('#')
+  const fragment = fragmentStart < 0 ? '' : serviceUrl.slice(fragmentStart)
+  const baseUrl = fragmentStart < 0 ? serviceUrl : serviceUrl.slice(0, fragmentStart)
+  const separator = baseUrl.includes('?')
+    ? (baseUrl.endsWith('?') || baseUrl.endsWith('&') ? '' : '&')
+    : '?'
+  const params = new URLSearchParams([
+    ['service', 'WMS'],
+    ['version', '1.1.0'],
+    ['request', 'GetMap'],
+    ['layers', layerName],
+    ['styles', ''],
+    ['format', 'image/png'],
+    ['transparent', 'true'],
+    ['srs', row.fallback_srs || 'EPSG:4326']
+  ])
+  return `${baseUrl}${separator}${params.toString()}${fragment}`
+}
+
 /**
  * PostgreSQL 仓储是认证与大屏查询的唯一持久层接口；所有业务输入都通过参数数组传递。
  */
@@ -134,7 +169,7 @@ function createPostgresRepository(client) {
       appendExactFilter(clauses, values, 'observation_date', context.observationDate, '::date')
       appendExactFilter(clauses, values, 'server', context.server)
       const result = await client.query(`
-        SELECT service_url, layer_name, service_type, metadata
+        SELECT service_type, service_url, layer_name, fallback_srs, metadata
         FROM map_service
         WHERE ${clauses.join('\n          AND ')}
         ORDER BY server, service_type, service_url, id DESC
@@ -144,7 +179,7 @@ function createPostgresRepository(client) {
       if (!row) return null
       const metadata = row.metadata && typeof row.metadata === 'object' ? row.metadata : {}
       return {
-        msg: row.service_url || row.layer_name || '',
+        msg: mapServiceUrl(row),
         extent: metadata.extent ?? null,
         metadata
       }

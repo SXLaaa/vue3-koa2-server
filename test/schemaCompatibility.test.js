@@ -114,27 +114,74 @@ test('map_service 使用 metadata.extent、enabled 与九个冻结查找维度',
   const { createPostgresRepository } = require('../repositories/postgresRepository')
   const client = captureClient([{
     service_url: '/geoserver/local/wms',
-    layer_name: 'local:wheat',
+    layer_name: 'local:小麦',
+    service_type: 'wms',
+    fallback_srs: 'EPSG:4490',
     metadata: { extent: [120, 35, 121, 36] }
   }])
   const repository = createPostgresRepository(client)
 
-  assert.deepEqual(await repository.findMapService({
+  const result = await repository.findMapService({
     moduleKey: 'security', subId: 'cropDistribution', category: 'crop_distribution',
     year: 2026, halfYear: 1, crop: '小麦', stage: 'mature',
     observationDate: '2026-06-01', server: 'local'
-  }), {
-    msg: '/geoserver/local/wms',
-    extent: [120, 35, 121, 36],
-    metadata: { extent: [120, 35, 121, 36] }
   })
+  const query = result.msg.slice(result.msg.indexOf('?') + 1)
+  const params = new URLSearchParams(query)
+
+  assert.equal(result.msg.startsWith('/geoserver/local/wms?'), true)
+  assert.equal(params.get('layers'), 'local:小麦')
+  assert.equal(params.get('service'), 'WMS')
+  assert.equal(params.get('version'), '1.1.0')
+  assert.equal(params.get('request'), 'GetMap')
+  assert.equal(params.get('styles'), '')
+  assert.equal(params.get('format'), 'image/png')
+  assert.equal(params.get('transparent'), 'true')
+  assert.equal(params.get('srs'), 'EPSG:4490')
+  assert.deepEqual(result.extent, [120, 35, 121, 36])
+  assert.deepEqual(result.metadata, { extent: [120, 35, 121, 36] })
   assert.match(client.calls[0].text, /enabled\s*=\s*TRUE/i)
   assert.match(client.calls[0].text, /observation_date\s*=\s*\$8::date/i)
+  assert.match(client.calls[0].text, /service_type[\s\S]*service_url[\s\S]*layer_name[\s\S]*fallback_srs[\s\S]*metadata/i)
   assert.doesNotMatch(client.calls[0].text, /SELECT[\s\S]*\bextent\b[\s\S]*FROM map_service/i)
   assert.deepEqual(client.calls[0].values, [
     'security', 'cropDistribution', 'crop_distribution', 2026, 1, '小麦',
     'mature', '2026-06-01', 'local'
   ])
+})
+
+test('WMS 已含 layers 时不重复追加且非 WMS 服务原样返回', async () => {
+  const { createPostgresRepository } = require('../repositories/postgresRepository')
+  const originalWms = '/geoserver/local/wms?service=WMS&layers=local%3Awheat&styles='
+  const mixedCaseWms = '/geoserver/local/wms?service=WMS&LaYeRs=local%3Awheat'
+  const rows = [
+    { service_url: originalWms, layer_name: 'local:wheat', service_type: 'wms', fallback_srs: null, metadata: {} },
+    { service_url: mixedCaseWms, layer_name: 'local:wheat', service_type: 'wms', fallback_srs: null, metadata: {} },
+    { service_url: '/geoserver/default/wms?token=local#map', layer_name: 'local:corn', service_type: 'wms', fallback_srs: null, metadata: {} },
+    { service_url: '/tiles/{z}/{x}/{y}.png', layer_name: 'ignored', service_type: 'xyz', fallback_srs: null, metadata: {} },
+    { service_url: '/images/wheat.png', layer_name: 'ignored', service_type: 'image', fallback_srs: null, metadata: {} }
+  ]
+  let index = 0
+  const repository = createPostgresRepository({ query: async () => ({ rows: [rows[index++]] }) })
+
+  const wms = await repository.findMapService({ moduleKey: 'security', subId: 'cropDistribution' })
+  const mixedCase = await repository.findMapService({ moduleKey: 'security', subId: 'cropDistribution' })
+  const defaultSrs = await repository.findMapService({ moduleKey: 'security', subId: 'cropDistribution' })
+  const xyz = await repository.findMapService({ moduleKey: 'security', subId: 'cropDistribution' })
+  const image = await repository.findMapService({ moduleKey: 'security', subId: 'cropDistribution' })
+  const query = wms.msg.slice(wms.msg.indexOf('?') + 1)
+
+  assert.equal(wms.msg, originalWms)
+  assert.equal(new URLSearchParams(query).get('layers'), 'local:wheat')
+  assert.equal([...new URLSearchParams(query).keys()].filter((key) => key.toLowerCase() === 'layers').length, 1)
+  assert.equal(mixedCase.msg, mixedCaseWms)
+  assert.equal([...new URLSearchParams(mixedCase.msg.split('?')[1]).keys()].filter((key) => key.toLowerCase() === 'layers').length, 1)
+  const defaultQuery = defaultSrs.msg.slice(defaultSrs.msg.indexOf('?') + 1).split('#')[0]
+  assert.equal(new URLSearchParams(defaultQuery).get('layers'), 'local:corn')
+  assert.equal(new URLSearchParams(defaultQuery).get('srs'), 'EPSG:4326')
+  assert.equal(defaultSrs.msg.startsWith('/geoserver/default/wms?token=local&'), true)
+  assert.equal(xyz.msg, '/tiles/{z}/{x}/{y}.png')
+  assert.equal(image.msg, '/images/wheat.png')
 })
 
 test('getVectorTableWms 默认用前端 columnKey 作为地图 category', async () => {
