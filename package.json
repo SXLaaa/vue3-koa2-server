@@ -11,7 +11,7 @@
     "check": "node scripts/check.js",
     "check:agro-admin": "node scripts/verify-agro-admin.js",
     "test": "node --test test/*.test.js",
-    "test:agro-admin": "node --test test/authService.test.js test/dashboardEndpoints.test.js test/failureIsolation.test.js test/postgresRepository.test.js test/spatialRepository.test.js test/agroAdminIntegration.test.js test/runtimePersistence.test.js"
+    "test:agro-admin": "node --test test/authService.test.js test/dashboardEndpoints.test.js test/failureIsolation.test.js test/postgresRepository.test.js test/spatialRepository.test.js test/schemaCompatibility.test.js test/agroAdminIntegration.test.js test/runtimePersistence.test.js"
   },
   "dependencies": {
     "debug": "^4.1.1",

@@ -162,9 +162,9 @@ test('三个空间计算接口在会话保护下调用对应仓储能力', async
   const { body: loginBody } = await login(server.baseUrl)
   const headers = { Authorization: `Bearer ${loginBody.token}`, 'Content-Type': 'application/json' }
   const cases = [
-    ['/agro-admin/spatial/intersections', { regionCode: '370200', featureType: 'wheat' }],
-    ['/agro-admin/spatial/containment', { regionCode: '370200', featureId: 1 }],
-    ['/agro-admin/spatial/area-statistics', { regionCode: '370200', featureType: 'wheat' }]
+    ['/agro-admin/spatial/intersections', { regionCode: '370200', category: 'wheat' }],
+    ['/agro-admin/spatial/containment', { regionCode: '370200', featureId: 'parcel-1' }],
+    ['/agro-admin/spatial/area-statistics', { regionCode: '370200', category: 'wheat' }]
   ]
 
   for (const [path, body] of cases) {

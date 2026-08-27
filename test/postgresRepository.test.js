@@ -13,10 +13,10 @@ test('页面载荷查询使用参数占位符并保留全部冻结维度', async
 
   const result = await repository.findDashboardPayload({
     endpointKey: 'statisticsYield',
-    moduleKey: 'crop_yield',
+    moduleKey: 'security',
     subId: 'yieldEstimate',
-    year: '2026',
-    halfYear: '1',
+    year: 2026,
+    halfYear: 1,
     crop: '小麦',
     observationDate: '2026-05-01',
     districtCode: '370200'
@@ -24,10 +24,11 @@ test('页面载荷查询使用参数占位符并保留全部冻结维度', async
 
   assert.deepEqual(result, { value: 8 })
   assert.match(calls[0].text, /module_key = \$1/)
-  assert.match(calls[0].text, /sub_id IS NOT DISTINCT FROM \$2/)
+  assert.match(calls[0].text, /sub_id = \$2/)
+  assert.match(calls[0].text, /endpoint_key = \$3/)
   assert.match(calls[0].text, /observation_date/)
   assert.deepEqual(calls[0].values, [
-    'crop_yield', 'yieldEstimate', '2026', '1', '小麦', '2026-05-01', '370200'
+    'security', 'yieldEstimate', 'statisticsYield', 2026, 1, '小麦', '2026-05-01', '370200'
   ])
   assert.equal(calls[0].text.includes('crop_yield'), false)
 })
@@ -68,13 +69,13 @@ test('时间轴查询同时按模块、子页面和作物参数隔离', async ()
 
   assert.deepEqual(await repository.findTimeline({
     endpointKey: 'getTimeLine',
-    moduleKey: 'crop_distribution',
+    moduleKey: 'security',
     subId: 'cropDistribution',
     crop: '小麦'
   }), [{ timeYear: '2026', halfYear: '1' }])
   assert.match(captured.text, /sub_id = \$2/)
-  assert.match(captured.text, /crop IS NOT DISTINCT FROM \$3/)
-  assert.deepEqual(captured.values, ['crop_distribution', 'cropDistribution', '小麦'])
+  assert.match(captured.text, /crop = \$3/)
+  assert.deepEqual(captured.values, ['security', 'cropDistribution', '小麦'])
 })
 
 test('地图元数据查询保留冻结的八个检索维度并返回空安全描述', async () => {
@@ -83,19 +84,20 @@ test('地图元数据查询保留冻结的八个检索维度并返回空安全�
   const repository = createPostgresRepository({
     query: async (text, values) => {
       captured = { text, values }
-      return { rows: [{ service_url: '', layer_name: 'local:wheat', extent: [0, 0, 1, 1], metadata: {} }] }
+      return { rows: [{ service_url: '', layer_name: 'local:wheat', metadata: { extent: [0, 0, 1, 1] } }] }
     }
   })
   const context = {
-    moduleKey: 'crop_distribution', subId: 'cropDistribution', category: 'vector',
-    year: '2026', halfYear: '1', crop: '小麦', stage: 'mature', server: 'local'
+    moduleKey: 'security', subId: 'cropDistribution', category: 'crop_distribution',
+    year: 2026, halfYear: 1, crop: '小麦', stage: 'mature',
+    observationDate: '2026-06-01', server: 'local'
   }
 
   assert.deepEqual(await repository.findMapService(context), {
-    msg: 'local:wheat', extent: [0, 0, 1, 1], metadata: {}
+    msg: 'local:wheat', extent: [0, 0, 1, 1], metadata: { extent: [0, 0, 1, 1] }
   })
   assert.deepEqual(captured.values, [
-    'crop_distribution', 'cropDistribution', 'vector', '2026', '1', '小麦', 'mature', 'local'
+    'security', 'cropDistribution', 'crop_distribution', 2026, 1, '小麦', 'mature', '2026-06-01', 'local'
   ])
 })
 
@@ -104,10 +106,10 @@ test('报告类型和唯一业务端点能推导无 columnKey 请求的页面维
 
   assert.deepEqual(
     [inferContext('queryReportList', { reportType: 4 }).moduleKey, inferContext('queryReportList', { reportType: 4 }).subId],
-    ['seedling_condition', 'seedling']
+    ['warning', 'seedling']
   )
   assert.deepEqual(
     [inferContext('queryBestHarvestTime', { year: '2026' }).moduleKey, inferContext('queryBestHarvestTime', { year: '2026' }).subId],
-    ['maturation_prediction', 'maturity']
+    ['warning', 'maturity']
   )
 })

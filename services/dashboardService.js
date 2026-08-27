@@ -8,64 +8,100 @@ class RequestTimeoutError extends Error {
   }
 }
 
-const MODULE_TO_SUB_ID = Object.freeze({
-  farmland_monitoring: 'cultivatedLand',
-  high_standard_farmland: 'highStandard',
-  protection_monitoring: 'basicProtection',
-  planting_task: 'plantingTask',
-  crop_distribution: 'cropDistribution',
-  crop_yield: 'yieldEstimate',
-  reproductive_period: 'growthStage',
-  seedling_condition: 'seedling',
-  growth_analysis: 'growth',
-  maturation_prediction: 'maturity',
-  meteorological_warning: 'weatherDisaster',
-  pest_warning: 'weatherDisaster'
+const COLUMN_CONTEXT = Object.freeze({
+  farmland_monitoring: ['farmland', 'cultivatedLand'],
+  high_standard_farmland: ['farmland', 'highStandard'],
+  protection_monitoring: ['farmland', 'basicProtection'],
+  green_grain: ['farmland', 'greenGrain'],
+  planting_task: ['security', 'plantingTask'],
+  crop_distribution: ['security', 'cropDistribution'],
+  crop_yield: ['security', 'yieldEstimate'],
+  reproductive_period: ['warning', 'growthStage'],
+  seedling_condition: ['warning', 'seedling'],
+  growth_analysis: ['warning', 'growth'],
+  maturation_prediction: ['warning', 'maturity'],
+  meteorological_warning: ['warning', 'weatherDisaster'],
+  pest_warning: ['warning', 'weatherDisaster']
 })
 
 const ENDPOINT_DEFAULT_CONTEXT = Object.freeze({
-  queryDemonstrationSubjectDetail: ['green_grain', 'greenGrain'],
-  queryGreenGrainIncreaseStatistics: ['green_grain', 'greenGrain'],
-  queryGreenGrainIncreaseList: ['green_grain', 'greenGrain'],
-  queryGreenGrainIncreaseStatisticsByArea: ['green_grain', 'greenGrain'],
-  queryByKeyword: ['green_grain', 'greenGrain'],
-  queryPlantingTaskStatistics: ['planting_task', 'plantingTask'],
-  queryPlantingTaskByArea: ['planting_task', 'plantingTask'],
-  statisticsPlantingTaskByArea: ['planting_task', 'plantingTask'],
-  queryReproductivePeriodByDate: ['reproductive_period', 'growthStage'],
-  getMaturityStageByDate: ['maturation_prediction', 'maturity'],
-  queryBestHarvestTime: ['maturation_prediction', 'maturity'],
-  queryMaturityStageByYear: ['maturation_prediction', 'maturity'],
-  queryDisasterStatistics: ['meteorological_warning', 'weatherDisaster'],
-  queryWeather: ['meteorological_warning', 'weatherDisaster'],
-  queryPestWarningByDate: ['pest_warning', 'weatherDisaster']
+  queryDemonstrationSubjectDetail: ['farmland', 'greenGrain', 'green_grain'],
+  queryGreenGrainIncreaseStatistics: ['farmland', 'greenGrain', 'green_grain'],
+  queryGreenGrainIncreaseList: ['farmland', 'greenGrain', 'green_grain'],
+  queryGreenGrainIncreaseStatisticsByArea: ['farmland', 'greenGrain', 'green_grain'],
+  queryByKeyword: ['farmland', 'greenGrain', 'green_grain'],
+  queryPlantingTaskStatistics: ['security', 'plantingTask', 'planting_task'],
+  queryPlantingTaskByArea: ['security', 'plantingTask', 'planting_task'],
+  statisticsPlantingTaskByArea: ['security', 'plantingTask', 'planting_task'],
+  queryReproductivePeriodByDate: ['warning', 'growthStage', 'reproductive_period'],
+  getMaturityStageByDate: ['warning', 'maturity', 'maturation_prediction'],
+  queryBestHarvestTime: ['warning', 'maturity', 'maturation_prediction'],
+  queryMaturityStageByYear: ['warning', 'maturity', 'maturation_prediction'],
+  queryDisasterStatistics: ['warning', 'weatherDisaster', 'meteorological_warning'],
+  queryWeather: ['warning', 'weatherDisaster', 'meteorological_warning'],
+  queryPestWarningByDate: ['warning', 'weatherDisaster', 'pest_warning']
 })
 
 const REPORT_TYPE_CONTEXT = Object.freeze({
-  1: ['farmland_monitoring', 'cultivatedLand'],
-  2: ['crop_yield', 'yieldEstimate'],
-  3: ['crop_distribution', 'cropDistribution'],
-  4: ['seedling_condition', 'seedling'],
-  5: ['pest_warning', 'weatherDisaster']
+  1: ['farmland', 'cultivatedLand', 'farmland_monitoring'],
+  2: ['security', 'yieldEstimate', 'crop_yield'],
+  3: ['security', 'cropDistribution', 'crop_distribution'],
+  4: ['warning', 'seedling', 'seedling_condition'],
+  5: ['warning', 'weatherDisaster', 'pest_warning']
 })
+
+const DATABASE_MODULES = new Set(['farmland', 'security', 'warning'])
+
+function normalizeYear(value) {
+  const match = String(value ?? '').trim().match(/^(\d{4})/u)
+  if (!match) return null
+  const year = Number(match[1])
+  return year >= 1900 && year <= 2200 ? year : null
+}
+
+function normalizeHalfYear(value) {
+  const halfYear = Number(value)
+  return halfYear === 1 || halfYear === 2 ? halfYear : null
+}
+
+function normalizeObservationDate(value) {
+  const text = String(value ?? '').trim()
+  let match = text.match(/^(\d{4})[-/](\d{2})[-/](\d{2})$/u)
+  if (!match) match = text.match(/^(\d{4})(\d{2})(\d{2})$/u)
+  if (!match) return null
+  const year = Number(match[1])
+  const month = Number(match[2])
+  const day = Number(match[3])
+  const candidate = new Date(Date.UTC(year, month - 1, day))
+  if (
+    year < 1900 || year > 2200 ||
+    candidate.getUTCFullYear() !== year ||
+    candidate.getUTCMonth() !== month - 1 ||
+    candidate.getUTCDate() !== day
+  ) return null
+  return `${match[1]}-${match[2]}-${match[3]}`
+}
 
 function inferContext(endpointKey, params) {
   const fallback = endpointKey === 'queryReportList'
     ? (REPORT_TYPE_CONTEXT[Number(params.reportType)] || [])
     : (ENDPOINT_DEFAULT_CONTEXT[endpointKey] || [])
-  const moduleKey = params.columnKey || params.moduleKey || fallback[0] || null
+  const requestedColumnKey = params.columnKey || (COLUMN_CONTEXT[params.moduleKey] ? params.moduleKey : null)
+  const columnKey = requestedColumnKey || fallback[2] || null
+  const mappedContext = COLUMN_CONTEXT[columnKey] || fallback
+  const moduleKey = DATABASE_MODULES.has(params.moduleKey) ? params.moduleKey : (mappedContext[0] || null)
   const rawYear = params.year || params.yearDay || params.yearMonth || null
-  const year = rawYear == null ? null : String(rawYear).slice(0, 4)
   const numericCrop = Number(params.cropType)
   const crop = params.typeName || params.crop || (numericCrop === 0 ? '小麦' : numericCrop === 1 ? '玉米' : null)
   return {
     endpointKey,
     moduleKey,
-    subId: params.subId || MODULE_TO_SUB_ID[moduleKey] || fallback[1] || null,
-    year,
-    halfYear: params.halfYear ?? params.lastYear ?? null,
+    subId: params.subId || mappedContext[1] || null,
+    columnKey,
+    year: normalizeYear(rawYear),
+    halfYear: normalizeHalfYear(params.halfYear ?? params.lastYear),
     crop,
-    observationDate: params.yearDay || params.observationDate || null,
+    observationDate: normalizeObservationDate(params.observationDate || params.yearDay || params.yearMonth),
     districtCode: params.districtCode || null
   }
 }
@@ -118,7 +154,12 @@ function createDashboardService({ repository, timeoutMs = 5_000 }) {
       if (endpoint.emptyKind === 'timeline' || endpoint.emptyKind === 'reproductiveTimeline') {
         operation = repository.findTimeline(context)
       } else if (endpoint.emptyKind === 'map') {
-        operation = repository.findMapService({ ...context, category: params.category, stage: params.stage, server: params.server })
+        operation = repository.findMapService({
+          ...context,
+          category: params.category || context.columnKey,
+          stage: params.stage || null,
+          server: params.server || 'local'
+        })
       } else {
         operation = repository.findDashboardPayload(context)
       }
@@ -128,4 +169,10 @@ function createDashboardService({ repository, timeoutMs = 5_000 }) {
   }
 }
 
-module.exports = { RequestTimeoutError, createDashboardService, inferContext }
+module.exports = {
+  RequestTimeoutError,
+  createDashboardService,
+  inferContext,
+  normalizeObservationDate,
+  normalizeYear
+}

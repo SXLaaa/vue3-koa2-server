@@ -64,7 +64,7 @@ function createAgroAdminRouter({ authService, captchaStore, dashboardService, sp
 
   router.post('/spatial/intersections', requireSession, async (ctx) => {
     const body = ctx.request.body || {}
-    requireFields(body, ['regionCode', 'featureType'])
+    requireFields(body, ['regionCode', 'category'])
     ctx.body = { code: 200, msg: '操作成功', data: await spatialRepository.findIntersections(body) }
   })
 
@@ -76,7 +76,7 @@ function createAgroAdminRouter({ authService, captchaStore, dashboardService, sp
 
   router.post('/spatial/area-statistics', requireSession, async (ctx) => {
     const body = ctx.request.body || {}
-    requireFields(body, ['regionCode', 'featureType'])
+    requireFields(body, ['regionCode', 'category'])
     ctx.body = { code: 200, msg: '操作成功', data: await spatialRepository.calculateIntersectionArea(body) }
   })
 

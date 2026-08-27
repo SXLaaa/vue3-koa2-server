@@ -5,15 +5,15 @@ function createSpatialRepository(client) {
   if (!client || typeof client.query !== 'function') throw new Error('PostgreSQL query client is required')
 
   return {
-    async findIntersections({ regionCode, featureType }) {
+    async findIntersections({ regionCode, category }) {
       const result = await client.query(`
-        SELECT f.id AS feature_id, f.feature_type, f.properties
+        SELECT f.feature_key AS feature_id, f.category, f.properties
         FROM agricultural_feature f
         JOIN administrative_region r ON r.region_code = $1
-        WHERE f.feature_type = $2
+        WHERE f.category = $2
           AND ST_Intersects(f.geom, r.geom)
-        ORDER BY f.id
-      `, [regionCode, featureType])
+        ORDER BY f.feature_key
+      `, [regionCode, category])
       return result.rows || []
     },
 
@@ -22,21 +22,21 @@ function createSpatialRepository(client) {
         SELECT ST_Within(f.geom, r.geom) AS contained
         FROM agricultural_feature f
         JOIN administrative_region r ON r.region_code = $2
-        WHERE f.id = $1
+        WHERE f.feature_key = $1
         LIMIT 1
       `, [featureId, regionCode])
       return Boolean(result.rows && result.rows[0] && result.rows[0].contained)
     },
 
-    async calculateIntersectionArea({ regionCode, featureType }) {
+    async calculateIntersectionArea({ regionCode, category }) {
       const result = await client.query(`
         SELECT COUNT(*) AS feature_count,
                COALESCE(SUM(ST_Area(ST_Intersection(f.geom, r.geom)::geography)), 0) AS area_square_meters
         FROM agricultural_feature f
         JOIN administrative_region r ON r.region_code = $1
-        WHERE f.feature_type = $2
+        WHERE f.category = $2
           AND ST_Intersects(f.geom, r.geom)
-      `, [regionCode, featureType])
+      `, [regionCode, category])
       const row = result.rows && result.rows[0] ? result.rows[0] : {}
       return {
         featureCount: Number(row.feature_count || 0),

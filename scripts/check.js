@@ -26,6 +26,7 @@ const targets = [
   'scripts/start-local.ps1',
   'scripts/stop-local.ps1',
   'scripts/verify-agro-admin.js',
+  'test/schemaCompatibility.test.js',
   'test/trainingStore.test.js'
 ]
 
