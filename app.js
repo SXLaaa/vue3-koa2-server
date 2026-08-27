@@ -1,63 +1,72 @@
+const path = require('path')
 const Koa = require('koa')
-const app = new Koa()
-const views = require('koa-views') // 作用：如果想使用koa2渲染页面
-const json = require('koa-json') // 作用：把参数转为json对象
-const onerror = require('koa-onerror')
+const Router = require('koa-router')
 const bodyparser = require('koa-bodyparser')
-const logger = require('koa-logger') // 作用：打印后台日志
+const json = require('koa-json')
+const logger = require('koa-logger')
+const serve = require('koa-static')
+const views = require('koa-views')
 const log4js = require('./utils/log4j')
-const users = require('./routes/users')
 const agent = require('./routes/agent')
-const router = require('koa-router')()
+const { readAgroConfig } = require('./config/agro')
+const { createPostgresPool } = require('./db/postgres')
+const { createPostgresRepository } = require('./repositories/postgresRepository')
+const { createSpatialRepository } = require('./repositories/spatialRepository')
+const { createCaptchaStore } = require('./services/captchaStore')
+const { createAuthService } = require('./services/authService')
+const { createDashboardService } = require('./services/dashboardService')
+const { createAgroErrorBoundary } = require('./middleware/agroErrorBoundary')
+const { createAgroAdminRouter } = require('./routes/agroAdmin')
 
-// error handler
-onerror(app)
-if (process.env.MONGO_DISABLED !== '1') {
-  require('./config/db')
+/**
+ * 应用工厂允许测试注入本地仓储；生产启动则创建受超时保护的 pg 连接池。
+ */
+function createApp(options = {}) {
+  const config = readAgroConfig()
+  const pool = options.pool || (options.repository ? null : createPostgresPool({
+    databaseUrl: config.databaseUrl,
+    connectionTimeoutMs: config.databaseConnectionTimeoutMs,
+    queryTimeoutMs: config.databaseQueryTimeoutMs
+  }))
+  const repository = options.repository || createPostgresRepository(pool)
+  const spatialRepository = options.spatialRepository || createSpatialRepository(pool)
+  const captchaStore = options.captchaStore || createCaptchaStore({ ttlMs: config.captchaTtlMs })
+  const sessionTtlSeconds = options.sessionTtlSeconds || config.sessionTtlSeconds
+  const authService = options.authService || createAuthService({
+    userRepository: repository,
+    captchaStore,
+    sessionSecret: options.sessionSecret || config.sessionSecret,
+    sessionTtlSeconds
+  })
+  const dashboardService = options.dashboardService || createDashboardService({
+    repository,
+    timeoutMs: options.dashboardTimeoutMs || config.dashboardTimeoutMs
+  })
+  const agroRouter = createAgroAdminRouter({
+    authService,
+    captchaStore,
+    dashboardService,
+    spatialRepository,
+    sessionTtlSeconds
+  })
+  const apiRouter = new Router({ prefix: '/api' })
+  apiRouter.use(agent.routes(), agent.allowedMethods())
+
+  const app = new Koa()
+  app.use(createAgroErrorBoundary())
+  app.use(bodyparser({ enableTypes: ['json', 'form', 'text'], jsonLimit: '1mb' }))
+  app.use(json())
+  if (options.enableRequestLogger !== false) app.use(logger())
+  app.use(serve(path.join(__dirname, 'public')))
+  app.use(views(path.join(__dirname, 'views'), { extension: 'pug' }))
+  app.use(agroRouter.routes()).use(agroRouter.allowedMethods())
+  app.use(apiRouter.routes()).use(apiRouter.allowedMethods())
+  app.on('error', (error) => log4js.error(error.stack || error.message))
+  app.context.postgresPool = pool
+  return app
 }
 
-app.use(async (ctx, next) => {
-  if (!ctx.path.startsWith('/api/agent')) {
-    await next()
-    return
-  }
-
-  ctx.set('Access-Control-Allow-Origin', process.env.AGENT_CORS_ORIGIN || '*')
-  ctx.set('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-  ctx.set('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS')
-  if (ctx.method === 'OPTIONS') {
-    ctx.status = 204
-    return
-  }
-
-  await next()
-})
-// middlewares  
-app.use(bodyparser({
-  enableTypes:['json', 'form', 'text'] // 接受前端传过来的参数格式
-}))
-app.use(json())
-app.use(logger())
-app.use(require('koa-static')(__dirname + '/public'))
-app.use(views(__dirname + '/views', {
-  extension: 'pug'
-}))
-
-// logger
-app.use(async (ctx, next) => {
-  log4js.info(`get params:${JSON.stringify(ctx.request.query)}`)
-  log4js.info(`post params:${JSON.stringify(ctx.request.body)}`)
-  await next()
-})
-
-router.prefix("/api")
-router.use(users.routes(), users.allowedMethods()) // use 加载路由，并允许下面的所有方法
-router.use(agent.routes(), agent.allowedMethods())
-app.use(router.routes(),router.allowedMethods())
-
-// error-handling
-app.on('error', (err, ctx) => {
-  log4js.error(`${err.stack}`) // 打印错误栈信息
-});
+const app = createApp()
+app.createApp = createApp
 
 module.exports = app

@@ -9,7 +9,9 @@
     "local": "powershell -ExecutionPolicy Bypass -File scripts/start-local.ps1",
     "local:stop": "powershell -ExecutionPolicy Bypass -File scripts/stop-local.ps1",
     "check": "node scripts/check.js",
-    "test": "node --test test/*.test.js"
+    "check:agro-admin": "node scripts/verify-agro-admin.js",
+    "test": "node --test test/*.test.js",
+    "test:agro-admin": "node --test test/authService.test.js test/dashboardEndpoints.test.js test/failureIsolation.test.js test/postgresRepository.test.js test/spatialRepository.test.js test/agroAdminIntegration.test.js test/runtimePersistence.test.js"
   },
   "dependencies": {
     "debug": "^4.1.1",
@@ -23,7 +25,7 @@
     "koa-router": "^7.4.0",
     "koa-static": "^5.0.0",
     "koa-views": "^6.2.0",
-    "mongoose": "^5.13.5",
+    "pg": "^8.16.3",
     "pug": "^2.0.3"
   },
   "devDependencies": {

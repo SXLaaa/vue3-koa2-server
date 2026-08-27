@@ -6,14 +6,26 @@ const root = path.join(__dirname, '..')
 const targets = [
   'app.js',
   'bin/www',
+  'config/agro.js',
+  'contracts/dashboardEndpoints.js',
+  'db/postgres.js',
+  'middleware/agroErrorBoundary.js',
+  'middleware/sessionAuth.js',
   'config/agent.js',
+  'routes/agroAdmin.js',
   'routes/agent.js',
+  'repositories/postgresRepository.js',
+  'repositories/spatialRepository.js',
+  'services/authService.js',
+  'services/captchaStore.js',
+  'services/dashboardService.js',
   'services/agentService.js',
   'services/memoryStore.js',
   'services/modelClient.js',
   'services/trainingStore.js',
   'scripts/start-local.ps1',
   'scripts/stop-local.ps1',
+  'scripts/verify-agro-admin.js',
   'test/trainingStore.test.js'
 ]
 

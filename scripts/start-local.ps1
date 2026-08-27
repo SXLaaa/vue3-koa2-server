@@ -36,5 +36,4 @@ if (-not ($models.models | Where-Object { $_.name -eq $model })) {
 }
 
 Set-Location -LiteralPath $projectRoot
-$env:MONGO_DISABLED = '1'
 & node bin/www
