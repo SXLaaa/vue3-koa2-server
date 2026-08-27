@@ -1,0 +1,12 @@
+{
+  "source_id": "OBJECTID",
+  "module_key": "MODULE",
+  "sub_id": "SUB_PAGE",
+  "category": "CATEGORY",
+  "year": "YEAR",
+  "half_year": "HALF_YEAR",
+  "crop": "CROP",
+  "stage": "STAGE",
+  "observation_date": "OBS_DATE",
+  "district_code": "DIST_CODE"
+}

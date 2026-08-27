@@ -1,0 +1,2 @@
+source_id,module_key,sub_id,category,year,half_year,crop,stage,observation_date,district_code,min_lon,min_lat,max_lon,max_lat
+replace-with-stable-source-id,security,cropDistribution,crop_distribution,2026,1,小麦,,,370200,120.10,36.10,120.20,36.20

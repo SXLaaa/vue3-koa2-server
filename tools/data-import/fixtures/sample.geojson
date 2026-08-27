@@ -1,0 +1,41 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "qd-wheat-001",
+      "properties": {
+        "source_id": "qd-wheat-001",
+        "module_key": "security",
+        "sub_id": "cropDistribution",
+        "category": "crop_distribution",
+        "year": 2026,
+        "half_year": 1,
+        "crop": "小麦",
+        "district_code": "370215"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[120.25, 36.30], [120.32, 36.30], [120.32, 36.36], [120.25, 36.36], [120.25, 36.30]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "qd-corn-001",
+      "properties": {
+        "source_id": "qd-corn-001",
+        "module_key": "security",
+        "sub_id": "yieldEstimate",
+        "category": "crop_yield",
+        "year": 2026,
+        "half_year": 2,
+        "crop": "玉米",
+        "district_code": "370281"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [[[[120.02, 36.10], [120.08, 36.10], [120.08, 36.16], [120.02, 36.16], [120.02, 36.10]]]]
+      }
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "source_id": "replace-with-stable-source-id",
+        "module_key": "security",
+        "sub_id": "cropDistribution",
+        "category": "crop_distribution",
+        "year": 2026,
+        "half_year": 1,
+        "crop": "小麦",
+        "district_code": "370200"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[120.10, 36.10], [120.20, 36.10], [120.20, 36.20], [120.10, 36.20], [120.10, 36.10]]]
+      }
+    }
+  ]
+}
