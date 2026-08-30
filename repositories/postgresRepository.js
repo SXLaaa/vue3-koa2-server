@@ -30,22 +30,33 @@ function sortTimelineRows(rows) {
   )
 }
 
-function buildReproductiveTimeline(rows) {
-  const sortedRows = sortTimelineRows(rows).map((row) => ({
-    ...row,
-    productionDate: dateText(row.productionDate)
-  }))
-  const years = new Map()
+function buildReproductiveTimeline(rows, requestedYear) {
+  const availableYears = Array.isArray(rows[0]?.availableYears)
+    ? rows[0].availableYears.map(Number).filter(Number.isInteger)
+    : []
+  const sortedRows = sortTimelineRows(rows).map((row) => {
+    const { availableYears: ignored, ...timelineRow } = row
+    return {
+      ...timelineRow,
+      productionDate: dateText(row.productionDate)
+    }
+  })
+  const rowYears = new Map()
   const months = new Map()
   for (const row of sortedRows) {
     const year = Number(row.timeYear)
-    if (Number.isInteger(year)) years.set(year, Boolean(years.get(year) || row.checked))
+    if (Number.isInteger(year)) rowYears.set(year, Boolean(rowYears.get(year) || row.checked))
     const date = row.productionDate
     if (date) {
       const monthKey = date.slice(0, 7)
       months.set(monthKey, Boolean(months.get(monthKey) || row.checked))
     }
   }
+  const years = [...new Set([...availableYears, ...rowYears.keys()])].sort((left, right) => left - right)
+  const normalizedRequestedYear = Number(requestedYear)
+  const selectedYear = years.includes(normalizedRequestedYear)
+    ? normalizedRequestedYear
+    : years.find((year) => rowYears.get(year)) ?? years.at(-1)
   return {
     reproductiveTimeList: sortedRows.filter((row) => row.productionDate),
     allMonth: [...months.entries()].sort(([left], [right]) => left.localeCompare(right)).map(([key, check]) => ({
@@ -53,7 +64,13 @@ function buildReproductiveTimeline(rows) {
       timeMonth: Number(key.slice(5, 7)),
       check
     })),
-    allYear: [...years.entries()].sort(([left], [right]) => left - right).map(([timeYear, check]) => ({ timeYear, check }))
+    allYear: years.map((timeYear) => ({
+      timeYear,
+      check: requestedYear === null || requestedYear === undefined
+        ? Boolean(rowYears.get(timeYear))
+        : timeYear === selectedYear
+    })),
+    year: selectedYear
   }
 }
 
@@ -124,6 +141,8 @@ function createPostgresRepository(client) {
       appendExactFilter(clauses, values, 'crop', context.crop)
       appendExactFilter(clauses, values, 'observation_date', context.observationDate, '::date')
       appendExactFilter(clauses, values, 'district_code', context.districtCode)
+      // 规范化变体是绿色增粮同路由多参数载荷的独立查询键。
+      appendExactFilter(clauses, values, 'request_variant', context.requestVariant)
       const result = await client.query(`
         SELECT payload
         FROM dashboard_payload
@@ -143,19 +162,43 @@ function createPostgresRepository(client) {
 
     async findTimeline(context) {
       const values = [context.moduleKey, context.subId]
-      const clauses = ['module_key = $1', 'sub_id = $2']
-      appendExactFilter(clauses, values, 'crop', context.crop)
+      const availableClauses = ['module_key = $1', 'sub_id = $2']
+      appendExactFilter(availableClauses, values, 'crop', context.crop)
+      const clauses = [...availableClauses]
+      // 生育期优先命中指定生产季；该作物无此年份时稳定回退最新可用生产季。
+      const hasRequestedSeason = context.endpointKey === 'getReproductiveTimeLine'
+        && context.year !== null
+        && context.year !== undefined
+      if (hasRequestedSeason) values.push(context.year)
+      const requestedSeasonParameter = hasRequestedSeason ? `$${values.length}` : null
       const result = await client.query(`
+        WITH available_seasons AS (
+          SELECT
+            array_agg(DISTINCT year ORDER BY year) AS years
+            ${requestedSeasonParameter
+              ? `, CASE
+                  WHEN ${requestedSeasonParameter} = ANY(array_agg(DISTINCT year ORDER BY year))
+                    THEN ${requestedSeasonParameter}
+                  ELSE max(year)
+                END AS "selectedYear"`
+              : ''}
+          FROM screen_timeline
+          WHERE ${availableClauses.join('\n            AND ')}
+        )
         SELECT year AS "timeYear", half_year AS "halfYear",
-               crop, observation_date AS "productionDate", stage, label,
-               sort_order AS "sortOrder", active AS checked
+               crop, observation_date AS "productionDate",
+               stage AS "periodType", label,
+               sort_order AS "sortOrder", active AS checked,
+               available_seasons.years AS "availableYears"
         FROM screen_timeline
+        CROSS JOIN available_seasons
         WHERE ${clauses.join('\n          AND ')}
+          ${requestedSeasonParameter ? 'AND year = available_seasons."selectedYear"' : ''}
         ORDER BY sort_order, observation_date, year, half_year, id
       `, values)
       const rows = result && Array.isArray(result.rows) ? result.rows : []
       if (context.endpointKey !== 'getReproductiveTimeLine') return sortTimelineRows(rows)
-      return buildReproductiveTimeline(rows)
+      return buildReproductiveTimeline(rows, context.year)
     },
 
     async findMapService(context) {

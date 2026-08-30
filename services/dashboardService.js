@@ -52,6 +52,48 @@ const REPORT_TYPE_CONTEXT = Object.freeze({
 
 const DATABASE_MODULES = new Set(['farmland', 'security', 'warning'])
 
+const GREEN_GRAIN_ENDPOINTS = new Set([
+  'queryDemonstrationSubjectDetail',
+  'queryGreenGrainIncreaseStatistics',
+  'queryGreenGrainIncreaseList',
+  'queryGreenGrainIncreaseStatisticsByArea',
+  'queryByKeyword'
+])
+
+function normalizeSubjectTypes(value, fallback = [1, 2, 3]) {
+  const values = Array.isArray(value) ? value : fallback
+  const normalized = [...new Set(values.map(Number).filter((item) => [1, 2, 3].includes(item)))]
+  return (normalized.length ? normalized : fallback).sort((left, right) => left - right)
+}
+
+function normalizeVariantText(value) {
+  const text = String(value ?? '').trim().replace(/\s+/gu, ' ')
+  return text || '*'
+}
+
+/**
+ * 绿色增粮同一路由存在多组参数语义，统一变体键后才可由仓储精确命中对应载荷。
+ */
+function normalizeRequestVariant(endpointKey, params) {
+  if (!GREEN_GRAIN_ENDPOINTS.has(endpointKey)) return null
+  if (endpointKey === 'queryDemonstrationSubjectDetail') {
+    return `subject-id:${normalizeVariantText(params.subjectId)}`
+  }
+  if (endpointKey === 'queryGreenGrainIncreaseStatistics') return 'subject-types:1,2,3'
+  if (endpointKey === 'queryGreenGrainIncreaseStatisticsByArea') {
+    return `subject-type:${Number(params.subjectType)}`
+  }
+  if (endpointKey === 'queryGreenGrainIncreaseList' && params.subjectType !== undefined) {
+    return `subject-type:${Number(params.subjectType)}|subject-name:${normalizeVariantText(params.subjectName)}`
+  }
+
+  const subjectTypes = normalizeSubjectTypes(params.subjectTypeList).join(',')
+  if (endpointKey === 'queryByKeyword') {
+    return `subject-types:${subjectTypes}|keyword:${normalizeVariantText(params.keyWord)}`
+  }
+  return `subject-types:${subjectTypes}|subject-name:${normalizeVariantText(params.subjectName)}`
+}
+
 function normalizeYear(value) {
   const match = String(value ?? '').trim().match(/^(\d{4})/u)
   if (!match) return null
@@ -93,6 +135,7 @@ function inferContext(endpointKey, params) {
   const rawYear = params.year || params.yearDay || params.yearMonth || null
   const numericCrop = Number(params.cropType)
   const crop = params.typeName || params.crop || (numericCrop === 0 ? '小麦' : numericCrop === 1 ? '玉米' : null)
+  const requestVariant = normalizeRequestVariant(endpointKey, params)
   return {
     endpointKey,
     moduleKey,
@@ -102,7 +145,8 @@ function inferContext(endpointKey, params) {
     halfYear: normalizeHalfYear(params.halfYear ?? params.lastYear),
     crop,
     observationDate: normalizeObservationDate(params.observationDate || params.yearDay || params.yearMonth),
-    districtCode: params.districtCode || null
+    districtCode: params.districtCode || null,
+    ...(requestVariant ? { requestVariant } : {})
   }
 }
 
@@ -158,7 +202,7 @@ function createDashboardService({ repository, timeoutMs = 5_000 }) {
           ...context,
           category: params.category || context.columnKey,
           stage: params.stage || null,
-          server: params.server || 'local'
+          server: params.server || undefined
         })
       } else {
         operation = repository.findDashboardPayload(context)
@@ -173,6 +217,7 @@ module.exports = {
   RequestTimeoutError,
   createDashboardService,
   inferContext,
+  normalizeRequestVariant,
   normalizeObservationDate,
   normalizeYear
 }
